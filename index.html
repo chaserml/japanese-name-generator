@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japanese Name Generator - 書道 Calligraphy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="sakura-container">
+        <div class="sakura"></div>
+        <div class="sakura"></div>
+        <div class="sakura"></div>
+        <div class="sakura"></div>
+        <div class="sakura"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Japanese Name Generator</h1>
+            <p class="subtitle">書道 Calligraphy Name Converter</p>
+            <p class="description">Convert English names into beautiful kanji with meaningful translations</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <div class="input-group">
+                    <label for="nameInput">Enter a name:</label>
+                    <input 
+                        type="text" 
+                        id="nameInput" 
+                        placeholder="e.g., Sarah, Michael, Anna" 
+                        autocomplete="off"
+                    >
+                    <button id="convertBtn" class="primary-btn">Convert to Kanji</button>
+                </div>
+            </section>
+
+            <section id="syllablesSection" class="syllables-section hidden">
+                <h2>Select Kanji for Each Syllable</h2>
+                <p class="hint">Click on a kanji to select it for your name. Click the ★ to favorite kanji for future recommendations.</p>
+                <div id="syllablesContainer"></div>
+            </section>
+
+            <section id="resultSection" class="result-section hidden">
+                <h2>Your Japanese Name</h2>
+                <div class="result-display">
+                    <div class="kanji-result" id="kanjiResult"></div>
+                    <div class="romaji-result" id="romajiResult"></div>
+                    <div class="meaning-result" id="meaningResult"></div>
+                </div>
+                <button id="resetBtn" class="secondary-btn">Convert Another Name</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>Made with ♥ for Japanese calligraphy (書道) | No ads, just beautiful names</p>
+        </footer>
+    </div>
+
+    <script src="kanji-database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
