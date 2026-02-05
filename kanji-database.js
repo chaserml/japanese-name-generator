@@ -79,8 +79,7 @@ const kanjiDatabase = {
   "un": [
     { kanji: "運", meaning: "luck, fortune", romaji: "un" },
     { kanji: "雲", meaning: "cloud", romaji: "un" },
-    { kanji: "温", meaning: "warm, gentle", romaji: "un" },
-    { kanji: "海", meaning: "ocean, sea", romaji: "umi" }
+    { kanji: "温", meaning: "warm, gentle", romaji: "un" }
   ],
   
   // Ka-row

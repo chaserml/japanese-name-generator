@@ -66,12 +66,12 @@ class JapaneseNameGenerator {
         romaji = romaji.replace(/ph/g, 'f');         // ph -> f
         romaji = romaji.replace(/x/g, 'kusu');       // x -> kusu
         
-        // Use wanakana to normalize if available, otherwise use preprocessed romaji
+        // Use wanakana to normalize the romaji if available
         if (typeof wanakana !== 'undefined') {
             const kana = wanakana.toKana(romaji);
             const normalized = wanakana.toRomaji(kana);
-            // Only use normalized if it doesn't have unconverted characters
-            if (!/[a-z]/.test(normalized.replace(/[aiueon]/g, '').replace(/[kstnhmyrwgzdbp]/g, ''))) {
+            // Use normalized version if it's cleaner (no leftover English characters)
+            if (normalized && normalized.length > 0) {
                 romaji = normalized;
             }
         }
@@ -98,24 +98,8 @@ class JapaneseNameGenerator {
             if (!matched && i <= romaji.length - 2) {
                 const twoLetter = romaji.substring(i, i + 2);
                 
-                // Check if it's vowel+n pattern (an, en, in, on, un)
-                if (i <= romaji.length - 3) {
-                    const vowelPlusN = romaji.substring(i, i + 3);
-                    const lastChar = vowelPlusN.charAt(2);
-                    const vowels = ['a', 'e', 'i', 'o', 'u'];
-                    
-                    // If pattern is vowel+n (like "an", "en"), treat as one syllable
-                    if (vowels.includes(vowelPlusN.charAt(0)) && lastChar === 'n') {
-                        if (this.kanjiDatabase[vowelPlusN]) {
-                            syllables.push(vowelPlusN);
-                            i += 3;
-                            matched = true;
-                        }
-                    }
-                }
-                
                 // Standard 2-letter syllable
-                if (!matched && this.kanjiDatabase[twoLetter]) {
+                if (this.kanjiDatabase[twoLetter]) {
                     syllables.push(twoLetter);
                     i += 2;
                     matched = true;
