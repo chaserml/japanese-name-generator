@@ -29,9 +29,23 @@
                     <input 
                         type="text" 
                         id="nameInput" 
-                        placeholder="e.g., Sarah, Michael, Anna" 
+                        placeholder="e.g., Sarah, Klaus, Arjun, Maria" 
                         autocomplete="off"
                     >
+                    
+                    <!-- Optional language hint selector -->
+                    <div class="language-selector">
+                        <label for="languageHint" style="font-size: 0.9rem; font-weight: normal;">
+                            Language hint (optional):
+                        </label>
+                        <select id="languageHint" class="language-dropdown">
+                            <option value="en">English</option>
+                            <option value="de">German</option>
+                            <option value="hi">Hindi/Indian</option>
+                            <option value="la">Spanish/Latin</option>
+                        </select>
+                    </div>
+                    
                     <button id="convertBtn" class="primary-btn">Convert to Kanji</button>
                 </div>
             </section>
@@ -58,7 +72,9 @@
         </footer>
     </div>
 
+    <!-- Load scripts in correct order -->
     <script src="kanji-database.js"></script>
+    <script src="transliteration-engine.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

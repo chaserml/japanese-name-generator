@@ -1,10 +1,13 @@
 // Japanese Name Generator - Main Application Logic
+// Updated to use TransliterationEngine for accurate foreign name conversion
 
 class JapaneseNameGenerator {
     constructor() {
         this.kanjiDatabase = kanjiDatabase;
+        this.transliterator = new TransliterationEngine();
         this.selectedKanji = [];
         this.currentSyllables = [];
+        this.currentName = '';
         this.favorites = this.loadFavorites();
         this.RECOMMENDED_COUNT = 3;
         this.init();
@@ -17,6 +20,17 @@ class JapaneseNameGenerator {
             if (e.key === 'Enter') this.convertName();
         });
         document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+        
+        // Add language selector if it exists
+        const langSelector = document.getElementById('languageHint');
+        if (langSelector) {
+            langSelector.addEventListener('change', () => {
+                // Re-convert if name is already entered
+                if (document.getElementById('nameInput').value) {
+                    this.convertName();
+                }
+            });
+        }
     }
 
     // Load favorites from localStorage
@@ -51,9 +65,23 @@ class JapaneseNameGenerator {
         return this.favorites[syllable] && this.favorites[syllable].includes(kanji);
     }
 
-    // Convert English name to Japanese syllables
-    nameToSyllables(name) {
-        name = name.toLowerCase().trim();
+    /**
+     * Convert foreign name to Japanese syllables using TransliterationEngine
+     */
+    nameToSyllables(name, languageHint = 'en') {
+        // Use the transliteration engine to get romaji
+        const romaji = this.transliterator.translateName(name, languageHint);
+        
+        // Convert romaji to syllable array
+        return this.romajiToSyllables(romaji);
+    }
+
+    /**
+     * Break romaji string into Japanese syllables
+     * Handles multi-character combinations like "kya", "chu", etc.
+     */
+    romajiToSyllables(romaji) {
+        romaji = romaji.toLowerCase().trim();
         const syllables = [];
         let i = 0;
 
@@ -85,12 +113,15 @@ class JapaneseNameGenerator {
             'ju', 'ja', 'jo'
         ];
 
-        while (i < name.length) {
+        // Single vowels
+        const vowels = ['a', 'i', 'u', 'e', 'o'];
+
+        while (i < romaji.length) {
             let matched = false;
 
             // Try to match three-letter syllables first
-            if (i < name.length - 2) {
-                const threeChar = name.substring(i, i + 3);
+            if (i < romaji.length - 2) {
+                const threeChar = romaji.substring(i, i + 3);
                 if (threeLetterSyllables.includes(threeChar) && this.kanjiDatabase[threeChar]) {
                     syllables.push(threeChar);
                     i += 3;
@@ -99,8 +130,8 @@ class JapaneseNameGenerator {
             }
 
             // Try to match two-letter syllables
-            if (!matched && i < name.length - 1) {
-                const twoChar = name.substring(i, i + 2);
+            if (!matched && i < romaji.length - 1) {
+                const twoChar = romaji.substring(i, i + 2);
                 if (twoLetterSyllables.includes(twoChar) && this.kanjiDatabase[twoChar]) {
                     syllables.push(twoChar);
                     i += 2;
@@ -108,18 +139,28 @@ class JapaneseNameGenerator {
                 }
             }
 
-            // If no two-letter or three-letter match, try single letter
+            // Try to match single vowels or 'n'
             if (!matched) {
-                const oneChar = name.charAt(i);
+                const oneChar = romaji.charAt(i);
                 
-                // Map common English letters to Japanese syllables
+                if (vowels.includes(oneChar) || oneChar === 'n') {
+                    if (this.kanjiDatabase[oneChar]) {
+                        syllables.push(oneChar);
+                    }
+                    i++;
+                    matched = true;
+                }
+            }
+
+            // If still no match, map to closest syllable
+            if (!matched) {
+                const oneChar = romaji.charAt(i);
                 const letterMap = {
-                    'a': 'a', 'b': 'ba', 'c': 'ka', 'd': 'da', 'e': 'e',
-                    'f': 'fu', 'g': 'ga', 'h': 'ha', 'i': 'i', 'j': 'ju',
-                    'k': 'ka', 'l': 'ra', 'm': 'ma', 'n': 'na', 'o': 'o',
-                    'p': 'pa', 'q': 'ku', 'r': 'ra', 's': 'sa', 't': 'ta',
-                    'u': 'u', 'v': 'ba', 'w': 'wa', 'x': 'ku', 'y': 'ya',
-                    'z': 'za'
+                    'b': 'ba', 'c': 'ka', 'd': 'da', 'f': 'fu',
+                    'g': 'ga', 'h': 'ha', 'j': 'ju', 'k': 'ka',
+                    'l': 'ra', 'm': 'ma', 'p': 'pa', 'q': 'ku',
+                    'r': 'ra', 's': 'sa', 't': 'ta', 'v': 'ba',
+                    'w': 'wa', 'x': 'ku', 'y': 'ya', 'z': 'za'
                 };
 
                 const mappedSyllable = letterMap[oneChar] || 'a';
@@ -152,7 +193,13 @@ class JapaneseNameGenerator {
             return;
         }
 
-        this.currentSyllables = this.nameToSyllables(nameInput);
+        this.currentName = nameInput;
+
+        // Get language hint if available
+        const langSelector = document.getElementById('languageHint');
+        const languageHint = langSelector ? langSelector.value : 'en';
+
+        this.currentSyllables = this.nameToSyllables(nameInput, languageHint);
         this.selectedKanji = new Array(this.currentSyllables.length).fill(null);
 
         if (this.currentSyllables.length === 0) {
@@ -329,7 +376,45 @@ class JapaneseNameGenerator {
 
         // Show result section
         document.getElementById('resultSection').classList.remove('hidden');
+        
+        // Add "Save Translation" button if it doesn't exist
+        this.addSaveTranslationButton();
+        
         document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /**
+     * Add a button to save this name translation for future use
+     */
+    addSaveTranslationButton() {
+        const resultSection = document.getElementById('resultSection');
+        let saveBtn = document.getElementById('saveTranslationBtn');
+        
+        if (!saveBtn) {
+            saveBtn = document.createElement('button');
+            saveBtn.id = 'saveTranslationBtn';
+            saveBtn.className = 'secondary-btn';
+            saveBtn.textContent = '💾 Save This Translation';
+            saveBtn.style.marginTop = '15px';
+            
+            // Insert before reset button
+            const resetBtn = document.getElementById('resetBtn');
+            resetBtn.parentNode.insertBefore(saveBtn, resetBtn);
+        }
+        
+        // Update click handler
+        saveBtn.onclick = () => {
+            const romaji = this.currentSyllables.join('');
+            this.transliterator.saveCustomTranslation(this.currentName, romaji);
+            
+            // Show confirmation
+            saveBtn.textContent = '✓ Saved!';
+            saveBtn.style.background = 'var(--sakura-light)';
+            setTimeout(() => {
+                saveBtn.textContent = '💾 Save This Translation';
+                saveBtn.style.background = '';
+            }, 2000);
+        };
     }
 
     // Show error message
@@ -363,6 +448,7 @@ class JapaneseNameGenerator {
         document.getElementById('resultSection').classList.add('hidden');
         this.selectedKanji = [];
         this.currentSyllables = [];
+        this.currentName = '';
         
         // Clear any error messages
         const errorDiv = document.getElementById('errorMessage');

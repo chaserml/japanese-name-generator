@@ -438,3 +438,44 @@ footer {
         letter-spacing: 3px;
     }
 }
+/* Language Selector Styles - Add to existing styles.css */
+
+.language-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.language-dropdown {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid var(--sakura-light);
+    border-radius: 8px;
+    background: white;
+    color: var(--text-dark);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.language-dropdown:hover {
+    border-color: var(--sakura-pink);
+}
+
+.language-dropdown:focus {
+    border-color: var(--sakura-pink);
+    box-shadow: 0 0 0 3px rgba(255, 183, 197, 0.2);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .language-selector {
+        font-size: 0.85rem;
+    }
+    
+    .language-dropdown {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
