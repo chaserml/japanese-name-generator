@@ -585,12 +585,10 @@ const kanjiDatabase = {
   "ja": [
     { kanji: "蛇", meaning: "snake, serpent", romaji: "ja" },
     { kanji: "邪", meaning: "wicked, evil", romaji: "ja" },
-    { kanji: "斜", meaning: "diagonal, slanting", romaji: "sha" },
-    { kanji: "謝", meaning: "gratitude, apology", romaji: "sha" },
-    { kanji: "社", meaning: "company, society", romaji: "sha" },
     { kanji: "者", meaning: "person, someone", romaji: "ja" },
     { kanji: "若", meaning: "young, if", romaji: "jaku" },
-    { kanji: "寂", meaning: "loneliness, quiet", romaji: "jaku" }
+    { kanji: "寂", meaning: "loneliness, quiet", romaji: "jaku" },
+    { kanji: "雀", meaning: "sparrow", romaji: "jaku" }
   ],
   "jo": [
     { kanji: "徐", meaning: "gradually, gently", romaji: "jo" },
@@ -670,10 +668,9 @@ const kanjiDatabase = {
   "cha": [
     { kanji: "茶", meaning: "tea", romaji: "cha" },
     { kanji: "着", meaning: "wear, arrive", romaji: "chaku" },
-    { kanji: "査", meaning: "investigate, examine", romaji: "sa" },
-    { kanji: "嗟", meaning: "sigh, alas", romaji: "sa" },
-    { kanji: "叉", meaning: "fork, crotch", romaji: "sa" },
-    { kanji: "差", meaning: "distinction, difference", romaji: "sa" }
+    { kanji: "査", meaning: "investigate, examine", romaji: "cha" },
+    { kanji: "叉", meaning: "fork, crotch", romaji: "cha" },
+    { kanji: "差", meaning: "distinction, difference", romaji: "cha" }
   ],
   "chu": [
     { kanji: "忠", meaning: "loyalty, faithfulness", romaji: "chu" },
@@ -700,23 +697,21 @@ const kanjiDatabase = {
   "nya": [
     { kanji: "若", meaning: "young, if", romaji: "nyaku" },
     { kanji: "弱", meaning: "weak, frail", romaji: "nyaku" },
-    { kanji: "雀", meaning: "sparrow", romaji: "jaku" },
-    { kanji: "惹", meaning: "attract, captivate", romaji: "jaku" },
-    { kanji: "寂", meaning: "loneliness, quiet", romaji: "jaku" }
+    { kanji: "雀", meaning: "sparrow", romaji: "nyaku" },
+    { kanji: "惹", meaning: "attract, captivate", romaji: "nyaku" },
+    { kanji: "寂", meaning: "loneliness, quiet", romaji: "nyaku" }
   ],
   "nyu": [
     { kanji: "乳", meaning: "milk, breasts", romaji: "nyu" },
     { kanji: "入", meaning: "enter, insert", romaji: "nyu" },
     { kanji: "柔", meaning: "gentle, soft", romaji: "nyu" },
-    { kanji: "女", meaning: "woman, female", romaji: "nyo" },
-    { kanji: "尿", meaning: "urine", romaji: "nyo" }
+    { kanji: "褥", meaning: "cushion, bedding", romaji: "nyu" }
   ],
   "nyo": [
     { kanji: "女", meaning: "woman, female", romaji: "nyo" },
     { kanji: "如", meaning: "like, as if", romaji: "nyo" },
     { kanji: "尿", meaning: "urine", romaji: "nyo" },
-    { kanji: "溽", meaning: "humid, muggy", romaji: "joku" },
-    { kanji: "褥", meaning: "cushion, bedding", romaji: "joku" }
+    { kanji: "溽", meaning: "humid, muggy", romaji: "nyo" }
   ],
 
   // H-row combinations
@@ -729,11 +724,10 @@ const kanjiDatabase = {
   ],
   "hyu": [
     { kanji: "標", meaning: "signpost, mark", romaji: "hyu" },
-    { kanji: "氷", meaning: "ice", romaji: "hyo" },
-    { kanji: "飄", meaning: "flutter, float", romaji: "hyo" },
-    { kanji: "漂", meaning: "drift, float", romaji: "hyo" },
-    { kanji: "評", meaning: "evaluate, criticism", romaji: "hyo" },
-    { kanji: "票", meaning: "ballot, vote", romaji: "hyo" }
+    { kanji: "飄", meaning: "flutter, float", romaji: "hyu" },
+    { kanji: "漂", meaning: "drift, float", romaji: "hyu" },
+    { kanji: "評", meaning: "evaluate, criticism", romaji: "hyu" },
+    { kanji: "票", meaning: "ballot, vote", romaji: "hyu" }
   ],
   "hyo": [
     { kanji: "豹", meaning: "leopard, panther", romaji: "hyo" },
@@ -742,8 +736,7 @@ const kanjiDatabase = {
     { kanji: "票", meaning: "ballot, vote", romaji: "hyo" },
     { kanji: "氷", meaning: "ice", romaji: "hyo" },
     { kanji: "俵", meaning: "bag, bale", romaji: "hyo" },
-    { kanji: "標", meaning: "signpost, mark", romaji: "hyo" },
-    { kanji: "兵", meaning: "soldier, army", romaji: "hyo" }
+    { kanji: "標", meaning: "signpost, mark", romaji: "hyo" }
   ],
 
   // M-row combinations
@@ -756,10 +749,10 @@ const kanjiDatabase = {
   ],
   "myu": [
     { kanji: "謬", meaning: "error, false", romaji: "myu" },
-    { kanji: "廟", meaning: "mausoleum, shrine", romaji: "byo" },
-    { kanji: "妙", meaning: "mysterious, excellent", romaji: "myo" },
-    { kanji: "民", meaning: "people, nation", romaji: "min" },
-    { kanji: "眠", meaning: "sleep, slumber", romaji: "min" }
+    { kanji: "妙", meaning: "mysterious, excellent", romaji: "myu" },
+    { kanji: "民", meaning: "people, nation", romaji: "myu" },
+    { kanji: "眠", meaning: "sleep, slumber", romaji: "myu" },
+    { kanji: "廟", meaning: "mausoleum, shrine", romaji: "myu" }
   ],
   "myo": [
     { kanji: "妙", meaning: "mysterious, excellent", romaji: "myo" },
@@ -774,11 +767,11 @@ const kanjiDatabase = {
 
   // R-row combinations
   "rya": [
-    { kanji: "良", meaning: "good, excellent", romaji: "ryo" },
-    { kanji: "涼", meaning: "cool, refreshing", romaji: "ryo" },
-    { kanji: "量", meaning: "quantity, measure", romaji: "ryo" },
-    { kanji: "寮", meaning: "dormitory, hostel", romaji: "ryo" },
-    { kanji: "猟", meaning: "hunt, game", romaji: "ryo" }
+    { kanji: "良", meaning: "good, excellent", romaji: "rya" },
+    { kanji: "涼", meaning: "cool, refreshing", romaji: "rya" },
+    { kanji: "量", meaning: "quantity, measure", romaji: "rya" },
+    { kanji: "寮", meaning: "dormitory, hostel", romaji: "rya" },
+    { kanji: "猟", meaning: "hunt, game", romaji: "rya" }
   ],
   "ryu": [
     { kanji: "龍", meaning: "dragon", romaji: "ryu" },
@@ -811,10 +804,10 @@ const kanjiDatabase = {
   ],
   "gyu": [
     { kanji: "牛", meaning: "cow, ox", romaji: "gyu" },
-    { kanji: "球", meaning: "sphere, ball", romaji: "kyu" },
-    { kanji: "宮", meaning: "shrine, palace", romaji: "gu" },
-    { kanji: "弓", meaning: "bow, archery", romaji: "kyu" },
-    { kanji: "急", meaning: "sudden, urgent", romaji: "kyu" }
+    { kanji: "球", meaning: "sphere, ball", romaji: "gyu" },
+    { kanji: "宮", meaning: "shrine, palace", romaji: "gyu" },
+    { kanji: "弓", meaning: "bow, archery", romaji: "gyu" },
+    { kanji: "急", meaning: "sudden, urgent", romaji: "gyu" }
   ],
   "gyo": [
     { kanji: "暁", meaning: "dawn, daybreak", romaji: "gyo" },
