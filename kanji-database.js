@@ -571,6 +571,58 @@ const kanjiDatabase = {
     { kanji: "円", meaning: "circle, yen", romaji: "n" }
   ],
 
+  // Vowel + N combinations (for name endings)
+  "an": [
+    { kanji: "安", meaning: "peace, tranquility", romaji: "an" },
+    { kanji: "杏", meaning: "apricot", romaji: "an" },
+    { kanji: "案", meaning: "plan, proposal", romaji: "an" },
+    { kanji: "暗", meaning: "dark, memorize", romaji: "an" },
+    { kanji: "鞍", meaning: "saddle", romaji: "an" },
+    { kanji: "庵", meaning: "hermitage", romaji: "an" },
+    { kanji: "按", meaning: "press, hold", romaji: "an" },
+    { kanji: "餡", meaning: "bean paste", romaji: "an" }
+  ],
+  "in": [
+    { kanji: "院", meaning: "institution, temple", romaji: "in" },
+    { kanji: "印", meaning: "seal, stamp", romaji: "in" },
+    { kanji: "因", meaning: "cause, reason", romaji: "in" },
+    { kanji: "陰", meaning: "shade, shadow", romaji: "in" },
+    { kanji: "韻", meaning: "rhyme, elegance", romaji: "in" },
+    { kanji: "引", meaning: "pull, lead", romaji: "in" },
+    { kanji: "員", meaning: "member", romaji: "in" },
+    { kanji: "淫", meaning: "excess", romaji: "in" }
+  ],
+  "un": [
+    { kanji: "運", meaning: "fortune, carry", romaji: "un" },
+    { kanji: "雲", meaning: "cloud", romaji: "un" },
+    { kanji: "韻", meaning: "rhyme", romaji: "un" },
+    { kanji: "海", meaning: "sea", romaji: "un" },
+    { kanji: "紜", meaning: "confused", romaji: "un" },
+    { kanji: "芸", meaning: "art, craft", romaji: "un" },
+    { kanji: "温", meaning: "warm", romaji: "un" },
+    { kanji: "恩", meaning: "grace, kindness", romaji: "un" }
+  ],
+  "en": [
+    { kanji: "円", meaning: "circle, yen", romaji: "en" },
+    { kanji: "園", meaning: "garden, park", romaji: "en" },
+    { kanji: "縁", meaning: "connection, relationship", romaji: "en" },
+    { kanji: "遠", meaning: "distant", romaji: "en" },
+    { kanji: "延", meaning: "prolong, extend", romaji: "en" },
+    { kanji: "演", meaning: "perform, act", romaji: "en" },
+    { kanji: "宴", meaning: "feast, banquet", romaji: "en" },
+    { kanji: "援", meaning: "help, assist", romaji: "en" }
+  ],
+  "on": [
+    { kanji: "音", meaning: "sound, music", romaji: "on" },
+    { kanji: "恩", meaning: "grace, favor", romaji: "on" },
+    { kanji: "温", meaning: "warm, gentle", romaji: "on" },
+    { kanji: "穏", meaning: "calm, peaceful", romaji: "on" },
+    { kanji: "園", meaning: "garden", romaji: "on" },
+    { kanji: "遠", meaning: "distant", romaji: "on" },
+    { kanji: "怨", meaning: "resentment", romaji: "on" },
+    { kanji: "恩", meaning: "kindness, debt", romaji: "on" }
+  ],
+
   // Consonant + N combinations (for name endings like -san, -tan, etc.)
   "san": [
     { kanji: "山", meaning: "mountain, peak", romaji: "san" },
@@ -731,6 +783,386 @@ const kanjiDatabase = {
     { kanji: "転", meaning: "revolve, change", romaji: "den" },
     { kanji: "典", meaning: "law, code", romaji: "den" },
     { kanji: "展", meaning: "expand, unfold", romaji: "den" }
+  ],
+  "kin": [
+    { kanji: "金", meaning: "gold, metal", romaji: "kin" },
+    { kanji: "近", meaning: "near, close", romaji: "kin" },
+    { kanji: "勤", meaning: "diligent, work", romaji: "kin" },
+    { kanji: "禁", meaning: "prohibition", romaji: "kin" },
+    { kanji: "謹", meaning: "respectful, careful", romaji: "kin" },
+    { kanji: "欣", meaning: "delight, joy", romaji: "kin" },
+    { kanji: "琴", meaning: "koto, harp", romaji: "kin" },
+    { kanji: "筋", meaning: "muscle, line", romaji: "kin" }
+  ],
+  "kun": [
+    { kanji: "君", meaning: "lord, you", romaji: "kun" },
+    { kanji: "訓", meaning: "teaching, instruction", romaji: "kun" },
+    { kanji: "薫", meaning: "fragrance", romaji: "kun" },
+    { kanji: "勲", meaning: "merit, achievement", romaji: "kun" },
+    { kanji: "燻", meaning: "smoke, smolder", romaji: "kun" },
+    { kanji: "訓", meaning: "precept", romaji: "kun" },
+    { kanji: "勳", meaning: "meritorious deed", romaji: "kun" },
+    { kanji: "君", meaning: "monarch", romaji: "kun" }
+  ],
+  "kon": [
+    { kanji: "今", meaning: "now, present", romaji: "kon" },
+    { kanji: "根", meaning: "root, origin", romaji: "kon" },
+    { kanji: "昆", meaning: "insect, together", romaji: "kon" },
+    { kanji: "紺", meaning: "navy blue", romaji: "kon" },
+    { kanji: "魂", meaning: "soul, spirit", romaji: "kon" },
+    { kanji: "懇", meaning: "kindness, intimacy", romaji: "kon" },
+    { kanji: "墾", meaning: "cultivate", romaji: "kon" },
+    { kanji: "恨", meaning: "regret", romaji: "kon" }
+  ],
+  "son": [
+    { kanji: "尊", meaning: "respect, honor", romaji: "son" },
+    { kanji: "村", meaning: "village", romaji: "son" },
+    { kanji: "存", meaning: "exist, preserve", romaji: "son" },
+    { kanji: "孫", meaning: "grandchild", romaji: "son" },
+    { kanji: "損", meaning: "loss, harm", romaji: "son" },
+    { kanji: "遜", meaning: "humble, modest", romaji: "son" },
+    { kanji: "尊", meaning: "revered, noble", romaji: "son" },
+    { kanji: "村", meaning: "town", romaji: "son" }
+  ],
+  "ton": [
+    { kanji: "豚", meaning: "pig", romaji: "ton" },
+    { kanji: "頓", meaning: "suddenly, immediately", romaji: "ton" },
+    { kanji: "屯", meaning: "gather, camp", romaji: "ton" },
+    { kanji: "噸", meaning: "ton (weight)", romaji: "ton" },
+    { kanji: "呑", meaning: "swallow, drink", romaji: "ton" },
+    { kanji: "鈍", meaning: "dull, blunt", romaji: "ton" },
+    { kanji: "敦", meaning: "sincere, kind", romaji: "ton" },
+    { kanji: "惇", meaning: "sincere", romaji: "ton" }
+  ],
+  "nan": [
+    { kanji: "南", meaning: "south", romaji: "nan" },
+    { kanji: "難", meaning: "difficulty, hard", romaji: "nan" },
+    { kanji: "軟", meaning: "soft, gentle", romaji: "nan" },
+    { kanji: "楠", meaning: "camphor tree", romaji: "nan" },
+    { kanji: "男", meaning: "man, male", romaji: "nan" },
+    { kanji: "納", meaning: "supply, accept", romaji: "nan" },
+    { kanji: "南", meaning: "southern", romaji: "nan" },
+    { kanji: "軟", meaning: "flexible", romaji: "nan" }
+  ],
+  "nin": [
+    { kanji: "人", meaning: "person, human", romaji: "nin" },
+    { kanji: "任", meaning: "responsibility, duty", romaji: "nin" },
+    { kanji: "忍", meaning: "endure, patience", romaji: "nin" },
+    { kanji: "認", meaning: "recognize, acknowledge", romaji: "nin" },
+    { kanji: "仁", meaning: "benevolence, humanity", romaji: "nin" },
+    { kanji: "妊", meaning: "pregnancy", romaji: "nin" },
+    { kanji: "忍", meaning: "stealth, ninja", romaji: "nin" },
+    { kanji: "認", meaning: "approve", romaji: "nin" }
+  ],
+  "nun": [
+    { kanji: "温", meaning: "warm", romaji: "nun" },
+    { kanji: "主", meaning: "lord, master", romaji: "nun" },
+    { kanji: "布", meaning: "cloth, spread", romaji: "nun" },
+    { kanji: "奴", meaning: "servant", romaji: "nun" },
+    { kanji: "怒", meaning: "anger", romaji: "nun" },
+    { kanji: "努", meaning: "effort, strive", romaji: "nun" },
+    { kanji: "沼", meaning: "marsh, swamp", romaji: "nun" },
+    { kanji: "塗", meaning: "paint, plaster", romaji: "nun" }
+  ],
+  "nen": [
+    { kanji: "年", meaning: "year, age", romaji: "nen" },
+    { kanji: "念", meaning: "thought, sense", romaji: "nen" },
+    { kanji: "燃", meaning: "burn, blaze", romaji: "nen" },
+    { kanji: "然", meaning: "nature, so", romaji: "nen" },
+    { kanji: "捻", meaning: "twist, wrench", romaji: "nen" },
+    { kanji: "粘", meaning: "sticky, persevere", romaji: "nen" },
+    { kanji: "年", meaning: "annual", romaji: "nen" },
+    { kanji: "念", meaning: "wish, desire", romaji: "nen" }
+  ],
+  "non": [
+    { kanji: "納", meaning: "accept, supply", romaji: "non" },
+    { kanji: "濃", meaning: "thick, dense", romaji: "non" },
+    { kanji: "悩", meaning: "worry, suffer", romaji: "non" },
+    { kanji: "脳", meaning: "brain", romaji: "non" },
+    { kanji: "農", meaning: "agriculture, farming", romaji: "non" },
+    { kanji: "納", meaning: "deliver, store", romaji: "non" },
+    { kanji: "悩", meaning: "distress", romaji: "non" },
+    { kanji: "農", meaning: "cultivate", romaji: "non" }
+  ],
+  "han": [
+    { kanji: "半", meaning: "half, middle", romaji: "han" },
+    { kanji: "反", meaning: "anti, opposite", romaji: "han" },
+    { kanji: "判", meaning: "judgment, seal", romaji: "han" },
+    { kanji: "版", meaning: "printing block, edition", romaji: "han" },
+    { kanji: "範", meaning: "example, model", romaji: "han" },
+    { kanji: "犯", meaning: "crime, violate", romaji: "han" },
+    { kanji: "飯", meaning: "meal, cooked rice", romaji: "han" },
+    { kanji: "帆", meaning: "sail", romaji: "han" }
+  ],
+  "hin": [
+    { kanji: "品", meaning: "goods, article", romaji: "hin" },
+    { kanji: "貧", meaning: "poor, poverty", romaji: "hin" },
+    { kanji: "賓", meaning: "guest, visitor", romaji: "hin" },
+    { kanji: "頻", meaning: "frequent", romaji: "hin" },
+    { kanji: "浜", meaning: "beach, shore", romaji: "hin" },
+    { kanji: "瀕", meaning: "edge, brink", romaji: "hin" },
+    { kanji: "品", meaning: "refinement", romaji: "hin" },
+    { kanji: "賓", meaning: "honored guest", romaji: "hin" }
+  ],
+  "hun": [
+    { kanji: "分", meaning: "part, minute", romaji: "hun" },
+    { kanji: "噴", meaning: "spout, erupt", romaji: "hun" },
+    { kanji: "粉", meaning: "powder, flour", romaji: "hun" },
+    { kanji: "紛", meaning: "confusion", romaji: "hun" },
+    { kanji: "雰", meaning: "atmosphere", romaji: "hun" },
+    { kanji: "憤", meaning: "indignation", romaji: "hun" },
+    { kanji: "奮", meaning: "stirred up, rouse", romaji: "hun" },
+    { kanji: "分", meaning: "divide, understand", romaji: "hun" }
+  ],
+  "hen": [
+    { kanji: "変", meaning: "change, unusual", romaji: "hen" },
+    { kanji: "編", meaning: "compile, edit", romaji: "hen" },
+    { kanji: "辺", meaning: "area, vicinity", romaji: "hen" },
+    { kanji: "片", meaning: "piece, one-sided", romaji: "hen" },
+    { kanji: "返", meaning: "return, reply", romaji: "hen" },
+    { kanji: "偏", meaning: "partial, biased", romaji: "hen" },
+    { kanji: "遍", meaning: "everywhere, times", romaji: "hen" },
+    { kanji: "便", meaning: "convenience, mail", romaji: "hen" }
+  ],
+  "hon": [
+    { kanji: "本", meaning: "book, origin", romaji: "hon" },
+    { kanji: "翻", meaning: "turn over, translate", romaji: "hon" },
+    { kanji: "奔", meaning: "run, rush", romaji: "hon" },
+    { kanji: "盆", meaning: "tray, basin", romaji: "hon" },
+    { kanji: "凡", meaning: "ordinary, common", romaji: "hon" },
+    { kanji: "煩", meaning: "trouble, worry", romaji: "hon" },
+    { kanji: "反", meaning: "anti", romaji: "hon" },
+    { kanji: "本", meaning: "true, main", romaji: "hon" }
+  ],
+  "min": [
+    { kanji: "民", meaning: "people, nation", romaji: "min" },
+    { kanji: "眠", meaning: "sleep", romaji: "min" },
+    { kanji: "皆", meaning: "all, everyone", romaji: "min" },
+    { kanji: "閔", meaning: "pity, grieve", romaji: "min" },
+    { kanji: "憫", meaning: "compassion", romaji: "min" },
+    { kanji: "泯", meaning: "destroy, eliminate", romaji: "min" },
+    { kanji: "民", meaning: "populace", romaji: "min" },
+    { kanji: "眠", meaning: "rest", romaji: "min" }
+  ],
+  "mon": [
+    { kanji: "門", meaning: "gate, entrance", romaji: "mon" },
+    { kanji: "紋", meaning: "crest, pattern", romaji: "mon" },
+    { kanji: "問", meaning: "question, ask", romaji: "mon" },
+    { kanji: "文", meaning: "sentence, literature", romaji: "mon" },
+    { kanji: "聞", meaning: "hear, listen", romaji: "mon" },
+    { kanji: "悶", meaning: "worry, agony", romaji: "mon" },
+    { kanji: "門", meaning: "portal", romaji: "mon" },
+    { kanji: "紋", meaning: "design", romaji: "mon" }
+  ],
+  "mun": [
+    { kanji: "夢", meaning: "dream", romaji: "mun" },
+    { kanji: "無", meaning: "nothing, without", romaji: "mun" },
+    { kanji: "霧", meaning: "fog, mist", romaji: "mun" },
+    { kanji: "武", meaning: "military, warrior", romaji: "mun" },
+    { kanji: "務", meaning: "duty, service", romaji: "mun" },
+    { kanji: "娘", meaning: "daughter, girl", romaji: "mun" },
+    { kanji: "夢", meaning: "vision", romaji: "mun" },
+    { kanji: "無", meaning: "none", romaji: "mun" }
+  ],
+  "yan": [
+    { kanji: "岩", meaning: "rock, crag", romaji: "yan" },
+    { kanji: "厭", meaning: "dislike, get tired of", romaji: "yan" },
+    { kanji: "焔", meaning: "flame", romaji: "yan" },
+    { kanji: "艶", meaning: "glossy, charm", romaji: "yan" },
+    { kanji: "岩", meaning: "boulder", romaji: "yan" },
+    { kanji: "岩", meaning: "stone", romaji: "yan" },
+    { kanji: "焔", meaning: "blaze", romaji: "yan" },
+    { kanji: "艶", meaning: "beautiful", romaji: "yan" }
+  ],
+  "yun": [
+    { kanji: "運", meaning: "fortune, transport", romaji: "yun" },
+    { kanji: "雲", meaning: "cloud", romaji: "yun" },
+    { kanji: "韻", meaning: "rhyme, elegance", romaji: "yun" },
+    { kanji: "芸", meaning: "art, craft", romaji: "yun" },
+    { kanji: "運", meaning: "luck", romaji: "yun" },
+    { kanji: "雲", meaning: "clouds", romaji: "yun" },
+    { kanji: "韻", meaning: "melody", romaji: "yun" },
+    { kanji: "芸", meaning: "skill", romaji: "yun" }
+  ],
+  "yon": [
+    { kanji: "四", meaning: "four", romaji: "yon" },
+    { kanji: "世", meaning: "world, generation", romaji: "yon" },
+    { kanji: "夜", meaning: "night, evening", romaji: "yon" },
+    { kanji: "予", meaning: "beforehand, previous", romaji: "yon" },
+    { kanji: "余", meaning: "surplus, remainder", romaji: "yon" },
+    { kanji: "四", meaning: "fourth", romaji: "yon" },
+    { kanji: "世", meaning: "era", romaji: "yon" },
+    { kanji: "夜", meaning: "nighttime", romaji: "yon" }
+  ],
+  "rin": [
+    { kanji: "林", meaning: "forest, woods", romaji: "rin" },
+    { kanji: "倫", meaning: "ethics, morals", romaji: "rin" },
+    { kanji: "輪", meaning: "ring, wheel", romaji: "rin" },
+    { kanji: "隣", meaning: "neighbor, next to", romaji: "rin" },
+    { kanji: "鈴", meaning: "bell", romaji: "rin" },
+    { kanji: "凛", meaning: "dignified, cold", romaji: "rin" },
+    { kanji: "凜", meaning: "severe, strict", romaji: "rin" },
+    { kanji: "燐", meaning: "phosphorus", romaji: "rin" }
+  ],
+  "ron": [
+    { kanji: "論", meaning: "theory, discussion", romaji: "ron" },
+    { kanji: "倫", meaning: "ethics", romaji: "ron" },
+    { kanji: "侖", meaning: "think, reason", romaji: "ron" },
+    { kanji: "崙", meaning: "mountain range", romaji: "ron" },
+    { kanji: "論", meaning: "argument", romaji: "ron" },
+    { kanji: "論", meaning: "discourse", romaji: "ron" },
+    { kanji: "倫", meaning: "moral principles", romaji: "ron" },
+    { kanji: "論", meaning: "thesis", romaji: "ron" }
+  ],
+  "wan": [
+    { kanji: "湾", meaning: "bay, gulf", romaji: "wan" },
+    { kanji: "腕", meaning: "arm, ability", romaji: "wan" },
+    { kanji: "碗", meaning: "bowl", romaji: "wan" },
+    { kanji: "椀", meaning: "wooden bowl", romaji: "wan" },
+    { kanji: "蜿", meaning: "winding", romaji: "wan" },
+    { kanji: "湾", meaning: "inlet", romaji: "wan" },
+    { kanji: "腕", meaning: "skill", romaji: "wan" },
+    { kanji: "碗", meaning: "dish", romaji: "wan" }
+  ],
+  "won": [
+    { kanji: "円", meaning: "circle, yen", romaji: "won" },
+    { kanji: "怨", meaning: "resentment", romaji: "won" },
+    { kanji: "遠", meaning: "distant, far", romaji: "won" },
+    { kanji: "温", meaning: "warm, mild", romaji: "won" },
+    { kanji: "穏", meaning: "calm, quiet", romaji: "won" },
+    { kanji: "音", meaning: "sound", romaji: "won" },
+    { kanji: "恩", meaning: "favor, grace", romaji: "won" },
+    { kanji: "園", meaning: "garden", romaji: "won" }
+  ],
+  "gan": [
+    { kanji: "岩", meaning: "rock, crag", romaji: "gan" },
+    { kanji: "願", meaning: "wish, petition", romaji: "gan" },
+    { kanji: "眼", meaning: "eye, vision", romaji: "gan" },
+    { kanji: "顔", meaning: "face, expression", romaji: "gan" },
+    { kanji: "元", meaning: "origin, beginning", romaji: "gan" },
+    { kanji: "含", meaning: "include, contain", romaji: "gan" },
+    { kanji: "雁", meaning: "wild goose", romaji: "gan" },
+    { kanji: "岸", meaning: "shore, bank", romaji: "gan" }
+  ],
+  "gin": [
+    { kanji: "銀", meaning: "silver", romaji: "gin" },
+    { kanji: "吟", meaning: "recite, sing", romaji: "gin" },
+    { kanji: "銀", meaning: "silver color", romaji: "gin" },
+    { kanji: "吟", meaning: "chant, poetry", romaji: "gin" },
+    { kanji: "議", meaning: "deliberation", romaji: "gin" },
+    { kanji: "義", meaning: "righteousness", romaji: "gin" },
+    { kanji: "銀", meaning: "argent", romaji: "gin" },
+    { kanji: "吟", meaning: "recitation", romaji: "gin" }
+  ],
+  "gun": [
+    { kanji: "軍", meaning: "army, military", romaji: "gun" },
+    { kanji: "群", meaning: "group, flock", romaji: "gun" },
+    { kanji: "郡", meaning: "county, district", romaji: "gun" },
+    { kanji: "軍", meaning: "troops, forces", romaji: "gun" },
+    { kanji: "群", meaning: "crowd, herd", romaji: "gun" },
+    { kanji: "君", meaning: "lord, ruler", romaji: "gun" },
+    { kanji: "訓", meaning: "instruction", romaji: "gun" },
+    { kanji: "薫", meaning: "fragrant", romaji: "gun" }
+  ],
+  "gen": [
+    { kanji: "元", meaning: "origin, beginning", romaji: "gen" },
+    { kanji: "源", meaning: "source, origin", romaji: "gen" },
+    { kanji: "現", meaning: "present, appear", romaji: "gen" },
+    { kanji: "原", meaning: "meadow, original", romaji: "gen" },
+    { kanji: "玄", meaning: "mysterious, black", romaji: "gen" },
+    { kanji: "言", meaning: "word, speech", romaji: "gen" },
+    { kanji: "限", meaning: "limit, boundary", romaji: "gen" },
+    { kanji: "幻", meaning: "vision, phantom", romaji: "gen" }
+  ],
+  "gon": [
+    { kanji: "言", meaning: "word, speech", romaji: "gon" },
+    { kanji: "厳", meaning: "strict, stern", romaji: "gon" },
+    { kanji: "権", meaning: "authority, right", romaji: "gon" },
+    { kanji: "現", meaning: "present, actual", romaji: "gon" },
+    { kanji: "元", meaning: "origin", romaji: "gon" },
+    { kanji: "言", meaning: "say, tell", romaji: "gon" },
+    { kanji: "厳", meaning: "rigorous", romaji: "gon" },
+    { kanji: "権", meaning: "power", romaji: "gon" }
+  ],
+  "zan": [
+    { kanji: "残", meaning: "remainder, leftover", romaji: "zan" },
+    { kanji: "暫", meaning: "temporary, moment", romaji: "zan" },
+    { kanji: "斬", meaning: "cut, behead", romaji: "zan" },
+    { kanji: "惨", meaning: "miserable, cruel", romaji: "zan" },
+    { kanji: "讃", meaning: "praise, admire", romaji: "zan" },
+    { kanji: "残", meaning: "remain", romaji: "zan" },
+    { kanji: "暫", meaning: "briefly", romaji: "zan" },
+    { kanji: "讃", meaning: "glorify", romaji: "zan" }
+  ],
+  "zen": [
+    { kanji: "禅", meaning: "Zen, meditation", romaji: "zen" },
+    { kanji: "善", meaning: "good, virtue", romaji: "zen" },
+    { kanji: "全", meaning: "all, complete", romaji: "zen" },
+    { kanji: "前", meaning: "before, ahead", romaji: "zen" },
+    { kanji: "然", meaning: "nature, so", romaji: "zen" },
+    { kanji: "漸", meaning: "gradual", romaji: "zen" },
+    { kanji: "繕", meaning: "repair, mend", romaji: "zen" },
+    { kanji: "膳", meaning: "tray, meal", romaji: "zen" }
+  ],
+  "zon": [
+    { kanji: "存", meaning: "exist, suppose", romaji: "zon" },
+    { kanji: "尊", meaning: "respect, revere", romaji: "zon" },
+    { kanji: "村", meaning: "village", romaji: "zon" },
+    { kanji: "存", meaning: "preserve", romaji: "zon" },
+    { kanji: "尊", meaning: "honor", romaji: "zon" },
+    { kanji: "存", meaning: "maintain", romaji: "zon" },
+    { kanji: "尊", meaning: "noble", romaji: "zon" },
+    { kanji: "村", meaning: "hamlet", romaji: "zon" }
+  ],
+  "don": [
+    { kanji: "鈍", meaning: "dull, slow", romaji: "don" },
+    { kanji: "呑", meaning: "swallow, drink", romaji: "don" },
+    { kanji: "曇", meaning: "cloudy, unclear", romaji: "don" },
+    { kanji: "貪", meaning: "covet, greedy", romaji: "don" },
+    { kanji: "鈍", meaning: "blunt", romaji: "don" },
+    { kanji: "呑", meaning: "gulp", romaji: "don" },
+    { kanji: "曇", meaning: "overcast", romaji: "don" },
+    { kanji: "頓", meaning: "suddenly", romaji: "don" }
+  ],
+  "bin": [
+    { kanji: "便", meaning: "convenience", romaji: "bin" },
+    { kanji: "敏", meaning: "quick, clever", romaji: "bin" },
+    { kanji: "瓶", meaning: "bottle, jar", romaji: "bin" },
+    { kanji: "貧", meaning: "poor, poverty", romaji: "bin" },
+    { kanji: "浜", meaning: "beach, seashore", romaji: "bin" },
+    { kanji: "敏", meaning: "agile, alert", romaji: "bin" },
+    { kanji: "便", meaning: "useful", romaji: "bin" },
+    { kanji: "瓶", meaning: "vase", romaji: "bin" }
+  ],
+  "bon": [
+    { kanji: "盆", meaning: "tray, festival", romaji: "bon" },
+    { kanji: "凡", meaning: "ordinary, common", romaji: "bon" },
+    { kanji: "梵", meaning: "Buddhist, Sanskrit", romaji: "bon" },
+    { kanji: "煩", meaning: "anxiety, trouble", romaji: "bon" },
+    { kanji: "盆", meaning: "Bon festival", romaji: "bon" },
+    { kanji: "凡", meaning: "mediocre", romaji: "bon" },
+    { kanji: "梵", meaning: "pure", romaji: "bon" },
+    { kanji: "盆", meaning: "basin", romaji: "bon" }
+  ],
+  "pin": [
+    { kanji: "品", meaning: "goods, refinement", romaji: "pin" },
+    { kanji: "貧", meaning: "poor", romaji: "pin" },
+    { kanji: "賓", meaning: "guest", romaji: "pin" },
+    { kanji: "瀕", meaning: "on the verge", romaji: "pin" },
+    { kanji: "品", meaning: "article, quality", romaji: "pin" },
+    { kanji: "賓", meaning: "visitor", romaji: "pin" },
+    { kanji: "品", meaning: "elegance", romaji: "pin" },
+    { kanji: "頻", meaning: "frequent", romaji: "pin" }
+  ],
+  "pon": [
+    { kanji: "本", meaning: "book, true", romaji: "pon" },
+    { kanji: "盆", meaning: "tray, basin", romaji: "pon" },
+    { kanji: "翻", meaning: "turn over", romaji: "pon" },
+    { kanji: "反", meaning: "anti, reverse", romaji: "pon" },
+    { kanji: "本", meaning: "origin, main", romaji: "pon" },
+    { kanji: "凡", meaning: "ordinary", romaji: "pon" },
+    { kanji: "盆", meaning: "plate", romaji: "pon" },
+    { kanji: "本", meaning: "foundation", romaji: "pon" }
   ],
 
   // J-row syllables

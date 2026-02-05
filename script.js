@@ -176,16 +176,40 @@ class JapaneseNameGenerator {
 
         // Three-letter syllable combinations in Japanese
         const threeLetterSyllables = [
+            // Standard yōon (palatalized sounds)
             'jyu', 'kya', 'kyu', 'kyo', 'sha', 'shu', 'sho', 
             'cha', 'chu', 'cho', 'nya', 'nyu', 'nyo', 'hya', 
             'hyu', 'hyo', 'mya', 'myu', 'myo', 'rya', 'ryu', 
             'ryo', 'gya', 'gyu', 'gyo', 'bya', 'byu', 'byo', 
-            'pya', 'pyu', 'pyo', 'she', 'che', 'jyu',
-            'san', 'kan', 'tan', 'man', 'ran', 'ban', 'pan', 'dan',
-            'sen', 'ken', 'ten', 'men', 'ren', 'ben', 'pen', 'den',
-            'son', 'kon', 'ton', 'mon', 'ron', 'bon', 'pon', 'don',
-            'shin', 'chin', 'kin', 'min', 'rin', 'bin', 'pin', 'din',
-            'jun', 'kun', 'mun', 'run', 'bun', 'pun', 'gun'
+            'pya', 'pyu', 'pyo', 'she', 'che',
+            // K-row + n
+            'kan', 'kin', 'kun', 'ken', 'kon',
+            // S-row + n
+            'san', 'sen', 'son',
+            // T-row + n
+            'tan', 'ten', 'ton',
+            // N-row + n
+            'nan', 'nin', 'nun', 'nen', 'non',
+            // H-row + n
+            'han', 'hin', 'hun', 'hen', 'hon',
+            // M-row + n
+            'man', 'min', 'mun', 'men', 'mon',
+            // Y-row + n
+            'yan', 'yun', 'yon',
+            // R-row + n
+            'ran', 'rin', 'run', 'ren', 'ron',
+            // W-row + n
+            'wan', 'won',
+            // G-row + n (dakuten)
+            'gan', 'gin', 'gun', 'gen', 'gon',
+            // Z-row + n (dakuten)
+            'zan', 'zen', 'zon',
+            // D-row + n (dakuten)
+            'dan', 'den', 'don',
+            // B-row + n (dakuten)
+            'ban', 'bin', 'bun', 'ben', 'bon',
+            // P-row + n (handakuten)
+            'pan', 'pin', 'pun', 'pen', 'pon'
         ];
 
         // Common two-letter combinations in Japanese
@@ -207,7 +231,9 @@ class JapaneseNameGenerator {
             'ju', 'ja', 'jo', 'je',
             'fa', 'fi', 'fe', 'fo',
             'va', 'vi', 'vu', 've', 'vo',
-            'ti', 'tu'
+            'ti', 'tu',
+            // Vowel + n combinations (for name endings)
+            'an', 'in', 'un', 'en', 'on'
         ];
 
         // Single vowels
@@ -226,21 +252,44 @@ class JapaneseNameGenerator {
                 }
             }
 
-            // Try to match two-letter syllables
+            // Try to match two-letter syllables WITH look-ahead for 'n'
             if (!matched && i < romaji.length - 1) {
                 const twoChar = romaji.substring(i, i + 2);
-                if (twoLetterSyllables.includes(twoChar) && this.kanjiDatabase[twoChar]) {
+                
+                // Look ahead: if this two-letter syllable is followed by 'n', try three-letter combo first
+                if (i < romaji.length - 2 && romaji.charAt(i + 2) === 'n') {
+                    const threeCharWithN = twoChar + 'n';
+                    if (threeLetterSyllables.includes(threeCharWithN) && this.kanjiDatabase[threeCharWithN]) {
+                        syllables.push(threeCharWithN);
+                        i += 3;
+                        matched = true;
+                    }
+                }
+                
+                // If no match with 'n', try the regular two-letter syllable
+                if (!matched && twoLetterSyllables.includes(twoChar) && this.kanjiDatabase[twoChar]) {
                     syllables.push(twoChar);
                     i += 2;
                     matched = true;
                 }
             }
 
-            // Try to match single vowels or 'n'
+            // Try to match single vowels or 'n' WITH look-ahead for 'n'
             if (!matched) {
                 const oneChar = romaji.charAt(i);
                 
-                if (vowels.includes(oneChar) || oneChar === 'n') {
+                // Look ahead: if this vowel is followed by 'n', try two-letter combo first
+                if (vowels.includes(oneChar) && i < romaji.length - 1 && romaji.charAt(i + 1) === 'n') {
+                    const twoCharWithN = oneChar + 'n';
+                    if (twoLetterSyllables.includes(twoCharWithN) && this.kanjiDatabase[twoCharWithN]) {
+                        syllables.push(twoCharWithN);
+                        i += 2;
+                        matched = true;
+                    }
+                }
+                
+                // If no match with 'n', try single character
+                if (!matched && (vowels.includes(oneChar) || oneChar === 'n')) {
                     if (this.kanjiDatabase[oneChar]) {
                         syllables.push(oneChar);
                     }
