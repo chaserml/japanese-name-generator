@@ -6,6 +6,7 @@ class JapaneseNameGenerator {
         this.selectedKanji = [];
         this.currentSyllables = [];
         this.favorites = this.loadFavorites();
+        this.RECOMMENDED_COUNT = 3;
         this.init();
     }
 
@@ -127,7 +128,7 @@ class JapaneseNameGenerator {
     convertName() {
         const nameInput = document.getElementById('nameInput').value;
         if (!nameInput.trim()) {
-            alert('Please enter a name');
+            this.showError('Please enter a name');
             return;
         }
 
@@ -135,7 +136,7 @@ class JapaneseNameGenerator {
         this.selectedKanji = new Array(this.currentSyllables.length).fill(null);
 
         if (this.currentSyllables.length === 0) {
-            alert('Could not convert name to syllables');
+            this.showError('Could not convert name to syllables');
             return;
         }
 
@@ -179,9 +180,8 @@ class JapaneseNameGenerator {
             const sortedKanji = this.sortKanjiOptions(syllable, allKanji);
 
             // Split into recommended (first 2-3) and additional options
-            const recommendedCount = 3;
-            const recommended = sortedKanji.slice(0, recommendedCount);
-            const additional = sortedKanji.slice(recommendedCount);
+            const recommended = sortedKanji.slice(0, this.RECOMMENDED_COUNT);
+            const additional = sortedKanji.slice(this.RECOMMENDED_COUNT);
 
             // Recommended section
             if (recommended.length > 0) {
@@ -312,6 +312,30 @@ class JapaneseNameGenerator {
         document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
     }
 
+    // Show error message
+    showError(message) {
+        const inputGroup = document.querySelector('.input-group');
+        let errorDiv = document.getElementById('errorMessage');
+        
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'errorMessage';
+            errorDiv.style.color = 'var(--sakura-dark)';
+            errorDiv.style.marginTop = '10px';
+            errorDiv.style.fontSize = '0.9rem';
+            errorDiv.setAttribute('role', 'alert');
+            errorDiv.setAttribute('aria-live', 'polite');
+            inputGroup.appendChild(errorDiv);
+        }
+        
+        errorDiv.textContent = message;
+        
+        // Clear error after 3 seconds
+        setTimeout(() => {
+            if (errorDiv) errorDiv.textContent = '';
+        }, 3000);
+    }
+
     // Reset the application
     reset() {
         document.getElementById('nameInput').value = '';
@@ -319,6 +343,10 @@ class JapaneseNameGenerator {
         document.getElementById('resultSection').classList.add('hidden');
         this.selectedKanji = [];
         this.currentSyllables = [];
+        
+        // Clear any error messages
+        const errorDiv = document.getElementById('errorMessage');
+        if (errorDiv) errorDiv.textContent = '';
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });

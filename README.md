@@ -14,7 +14,7 @@ This is a beautiful, fast, ad-free web application designed for Japanese calligr
 - **Favorites System**: Mark your preferred kanji with a star (★) - favorites are saved and prioritized in recommendations
 - **Beautiful Display**: Each kanji shows:
   - Large, clear character (perfect for calligraphy reference)
-  - Romanji pronunciation
+  - Romaji pronunciation
   - English meaning/translation
 - **Final Name Display**: Complete kanji name with combined meaning
 - **Sakura Theme**: Clean, elegant pink and cherry blossom aesthetic
