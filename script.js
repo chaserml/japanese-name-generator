@@ -53,9 +53,28 @@ class JapaneseNameGenerator {
 
     // Convert English name to Japanese syllables
     nameToSyllables(name) {
-        // Step 1: Convert English name to romaji using Wanakana
-        // Wanakana will handle L→R conversion and proper phonetics
-        const romaji = wanakana.toRomaji(name.toLowerCase().trim());
+        // Step 1: Preprocess English name - handle L→R and other conversions
+        let romaji = name.toLowerCase().trim();
+        
+        // Replace English-specific patterns with Japanese equivalents
+        romaji = romaji.replace(/l/g, 'r');          // L -> R (Lillian -> Rirrian)
+        romaji = romaji.replace(/th/g, 's');         // th -> s (Nathan -> Nasan)
+        romaji = romaji.replace(/v/g, 'b');          // V -> B
+        romaji = romaji.replace(/si/g, 'shi');       // si -> shi
+        romaji = romaji.replace(/ti/g, 'chi');       // ti -> chi
+        romaji = romaji.replace(/tu/g, 'tsu');       // tu -> tsu
+        romaji = romaji.replace(/ph/g, 'f');         // ph -> f
+        romaji = romaji.replace(/x/g, 'kusu');       // x -> kusu
+        
+        // Use wanakana to normalize if available, otherwise use preprocessed romaji
+        if (typeof wanakana !== 'undefined') {
+            const kana = wanakana.toKana(romaji);
+            const normalized = wanakana.toRomaji(kana);
+            // Only use normalized if it doesn't have unconverted characters
+            if (!/[a-z]/.test(normalized.replace(/[aiueon]/g, '').replace(/[kstnhmyrwgzdbp]/g, ''))) {
+                romaji = normalized;
+            }
+        }
         
         // Step 2: Parse romaji into proper Japanese syllables
         // Must handle: CV (consonant+vowel), V (vowel alone), and CVN (consonant+vowel+n)
@@ -79,7 +98,7 @@ class JapaneseNameGenerator {
             if (!matched && i <= romaji.length - 2) {
                 const twoLetter = romaji.substring(i, i + 2);
                 
-                // Check if it's consonant+vowel+n pattern (an, en, in, on, un)
+                // Check if it's vowel+n pattern (an, en, in, on, un)
                 if (i <= romaji.length - 3) {
                     const vowelPlusN = romaji.substring(i, i + 3);
                     const lastChar = vowelPlusN.charAt(2);
@@ -103,7 +122,7 @@ class JapaneseNameGenerator {
                 }
             }
             
-            // Try single letter (vowels: a, i, u, e, o)
+            // Try single letter (vowels: a, i, u, e, o, or standalone n)
             if (!matched) {
                 const oneLetter = romaji.charAt(i);
                 const vowels = ['a', 'e', 'i', 'o', 'u'];
@@ -118,7 +137,7 @@ class JapaneseNameGenerator {
                     }
                 }
                 
-                // Single vowel
+                // Single vowel or standalone 'n'
                 if (!matched && this.kanjiDatabase[oneLetter]) {
                     syllables.push(oneLetter);
                     i++;
