@@ -1,211 +1,164 @@
-# Phonetic Transliteration Engine for Japanese Name Generator
+# Japanese Name Generator - Kanji Calligraphy Tool
 
-## 📦 What's in This PR?
+> A beautiful web application for converting foreign names into Japanese kanji characters for calligraphy art.
 
-This PR adds intelligent foreign name-to-katakana conversion for your wife's Japanese calligraphy business. No more manual syllable guessing!
+## 🎌 Overview
 
-## 🚀 Quick Implementation (5 minutes)
+This tool helps convert any name into Japanese syllables and provides meaningful kanji options with positive, encouraging, and biblical meanings. Perfect for calligraphy artists creating personalized Japanese name art!
 
-1. **Add new file:** `transliteration-engine.js`
-2. **Replace:** `script.js` with `script-updated.js`
-3. **Replace:** `index.html` with `index-updated.html`
-4. **Add to CSS:** Append `language-selector-styles.css` to your `styles.css`
-5. **Test:** Open in browser and try "Chase" → should give "che-i-su" ✅
+## ✨ Key Features
 
-## 📚 Documentation Files
+### 1. **Dual Input Modes**
+- **English/Romaji Input:** Type names in English with automatic phonetic conversion
+- **Katakana Input:** Direct katakana input for Japanese speakers
 
-| File | Purpose |
-|------|---------|
-| `PR_DESCRIPTION.md` | Complete technical overview and rationale |
-| `QUICK_START.md` | Step-by-step setup and usage guide |
-| `BEFORE_AFTER_EXAMPLES.md` | 20+ examples showing improvement |
+### 2. **Multi-Language Support**
+Intelligent phonetic rules for:
+- **English:** ch→che, th→s, proper vowel combinations
+- **German:** sch→sh, w→v, z→ts
+- **Hindi/Indian:** Aspirated consonants (bh, dh, th)
+- **Spanish/Latin:** j→h, ll→y, ñ→ny
 
-## ✨ Key Improvements
+### 3. **Comprehensive Kanji Database**
+- **120+ syllables** with full coverage
+- **8+ kanji options** per syllable (vowels fully enhanced)
+- **60+ n-final combinations** (an, in, un, kan, san, tan, etc.)
+- Focus on positive, encouraging, and biblical meanings
 
-### Before
-```
-"Chase" → ka-ha-a-sa-e (5 syllables) ❌ Unnatural
-"Matthew" → ma-a-to-to-ha-e-wa ❌ 7+ syllables!
-"Klaus" → ka-ra-a-u-sa ❌ Wrong pronunciation
-```
+### 4. **Smart Syllable Parsing**
+- Handles complex combinations: kya, chu, sha, che, she
+- Proper n-final detection (Julian → JU-RI-AN, not JU-RI-A-N)
+- Look-ahead logic for natural syllable breaks
+- Support for name endings like -san, -tan, -chan
 
-### After
-```
-"Chase" → che-i-su (3 syllables) ✅ Perfect!
-"Matthew" → ma-syu (2 syllables) ✅ Natural!
-"Klaus" → ku-ra-u-su (4 syllables) ✅ Correct German!
-```
+### 5. **User-Friendly Interface**
+- ⭐ Recommended kanji suggestions
+- 📚 Additional options for variety
+- ❤️ Favorite system (saves preferences)
+- � Save custom translations
+- 🌸 Beautiful sakura-themed design
 
-## 🎯 Features
+## � Quick Start
 
-### 1. Multi-Language Support
-- **English:** th→s, ch, vowel combinations, silent letters
-- **German:** sch→sh, z→ts, w→v, umlauts (ü, ö, ä)
-- **Hindi/Indian:** bh→b, dh→d, th→t, aspirated consonants
-- **Spanish/Latin:** ll→y, j→h, ñ→ny, soft c/g
+### Online
+Visit: [https://chaserml.github.io/japanese-name-generator/](https://chaserml.github.io/japanese-name-generator/)
 
-### 2. Common Name Dictionary (100+ names)
-Instant recognition for popular names:
-- **English:** Chase, Sarah, Michael, Emily, Grace...
-- **German:** Klaus, Wolfgang, Schmidt, Hans...
-- **Indian:** Arjun, Priya, Deepak, Raj...
-- **Spanish:** José, Maria, Miguel, Carlos...
+### Local Development
+```bash
+# Clone the repository
+git clone https://github.com/chaserml/japanese-name-generator.git
+cd japanese-name-generator
 
-### 3. Learning System
-- **"Save Translation"** button for custom names
-- Builds personal dictionary over time
-- Saved in localStorage (persists between sessions)
-- Override phonetic rules when needed
-
-### 4. Performance
-- ⚡ Client-side only (no API calls)
-- 🌐 Works offline
-- 🚫 No ads, no tracking
-- ⏱️ < 5ms per conversion
-- 📱 Mobile-friendly
-
-## 🎨 Usage at Events
-
-### Typical Workflow
-```
-1. Person says their name
-2. Your wife types it in
-3. Optional: Select language hint (English/German/Hindi/Spanish)
-4. App shows accurate syllables instantly
-5. She picks beautiful kanji
-6. Optional: Click "Save" for unusual names
-7. Write gorgeous calligraphy! ✨
+# Open in browser
+# Simply open index.html in your web browser
 ```
 
-### Time Savings
-- **Before:** 3-4 minutes per name (with manual corrections)
-- **After:** 1-2 minutes per name (automatic accuracy)
-- **At 50-person event:** Save ~100 minutes = 1.5 hours!
+## 📝 Usage
 
-## 🔧 Technical Details
+### Basic Workflow
+1. **Select Input Mode:** Choose between English or Katakana input
+2. **Enter Name:** Type the name (e.g., "Chase", "Julian", "Jonathan")
+3. **Optional:** Select language hint for better accuracy
+4. **View Syllables:** See automatic syllable breakdown
+5. **Choose Kanji:** Pick from 8+ meaningful options per syllable
+6. **Save Favorites:** Star your preferred kanji for future use
+7. **Get Result:** Beautiful Japanese name with meanings!
 
-### Files Modified
+### Example Conversions
 ```
-index.html              → Added language selector dropdown
-script.js               → Integrated TransliterationEngine
-styles.css              → Added language selector styles
-```
-
-### Files Added
-```
-transliteration-engine.js   → Core phonetic engine (200+ rules)
-```
-
-### Dependencies
-- ✅ None! Pure JavaScript
-- ✅ All existing features still work
-- ✅ Backward compatible
-- ✅ No breaking changes
-
-### Browser Support
-- ✅ Chrome/Edge (latest)
-- ✅ Firefox (latest)
-- ✅ Safari (latest)
-- ✅ Mobile browsers
-
-## 📖 Documentation
-
-### For Quick Setup
-Read: `QUICK_START.md`
-- Installation steps
-- Usage examples
-- Troubleshooting
-- Tips for your wife
-
-### For Technical Details
-Read: `PR_DESCRIPTION.md`
-- Architecture overview
-- How it works (with diagrams)
-- API documentation
-- Future enhancements
-
-### For Comparison
-Read: `BEFORE_AFTER_EXAMPLES.md`
-- 20+ before/after examples
-- Statistics and metrics
-- Real-world scenarios
-- Time savings calculations
-
-## 🧪 Testing
-
-Try these test cases after implementation:
-
-```javascript
-// English names
-"Chase" → expect: che-i-su ✅
-"Matthew" → expect: ma-syu ✅
-"Grace" → expect: gu-re-i-su ✅
-
-// German names  
-"Klaus" → expect: ku-ra-u-su ✅
-"Wolfgang" → expect: vo-ru-fu-gan-gu ✅
-
-// Indian names
-"Arjun" → expect: a-ru-ju-n ✅
-"Priya" → expect: pu-ri-ya ✅
-
-// Spanish names
-"José" → expect: ho-se ✅
-"Maria" → expect: ma-ri-a ✅
+Chase     → CHE-I-SU    (3 syllables) ✅
+Julian    → JU-RI-AN    (3 syllables) ✅
+Jonathan  → JO-NA-SAN   (3 syllables) ✅
+Sarah     → SA-RA       (2 syllables) ✅
+Michelle  → MI-SHE-RU   (3 syllables) ✅
 ```
 
-## 🎁 Perfect Valentine's Day Gift!
+## 🎨 Recent Updates (February 2026)
 
-This tool will:
-- ✅ Make your wife's job easier at events
-- ✅ Give her confidence with any name
-- ✅ Let her serve more customers
-- ✅ Allow focus on beautiful calligraphy
-- ✅ Build a growing knowledge base over time
+### Bug Fixes
+- ✅ Fixed "Chase" parsing (now correctly: CHE-I-SU)
+- ✅ Fixed "Julian" parsing (now correctly: JU-RI-AN)
+- ✅ Fixed "Jonathan" parsing (now correctly: JO-NA-SAN)
+- ✅ Fixed script loading error
+- ✅ Corrected all romaji field mismatches
 
-## 🤝 Next Steps
+### New Features
+- ✅ Added katakana input toggle
+- ✅ Complete katakana-to-romaji conversion (120+ combinations)
+- ✅ Smart n-final detection with look-ahead logic
+- ✅ Enhanced vowel database (8 options each with biblical meanings)
 
-### Immediate
-1. Review the code files
-2. Test with common names your wife encounters
-3. Add any missing names to dictionary
-4. Deploy to GitHub Pages
+### Database Enhancements
+- ✅ Added missing syllables: che, she, je, fa-fo, va-vo, wi, we, ti, tu, di, du
+- ✅ Added 60+ consonant+n combinations with proper n-final kanji
+- ✅ Vowel+n: an, in, un, en, on
+- ✅ K-row+n: kan, kin, kun, ken, kon
+- ✅ S-row+n: san, sen, son
+- ✅ T-row+n: tan, ten, ton
+- ✅ N-row+n: nan, nin, nun, nen, non
+- ✅ H-row+n: han, hin, hun, hen, hon
+- ✅ M-row+n: man, min, mon, mun
+- ✅ Y-row+n: yan, yun, yon
+- ✅ R-row+n: ran, rin, ron
+- ✅ W-row+n: wan, won
+- ✅ G-row+n: gan, gin, gun, gen, gon
+- ✅ Z-row+n: zan, zen, zon
+- ✅ D-row+n: dan, don
+- ✅ B-row+n: ban, bin, bon
+- ✅ P-row+n: pan, pin, pon
 
-### Future (Optional)
-- [ ] Add more languages (French, Italian, Korean, etc.)
+## 🔧 Technical Stack
+
+### Core Technologies
+- **HTML5** - Semantic markup
+- **CSS3** - Modern styling with animations
+- **Vanilla JavaScript** - No frameworks needed
+- **LocalStorage** - Persistent favorites and custom translations
+
+### File Structure
+```
+japanese-name-generator/
+├── index.html              # Main HTML structure
+├── styles.css              # Styling and animations
+├── script.js               # Main application logic
+├── kanji-database.js       # Comprehensive kanji mappings
+├── translation-engine.js   # Phonetic transliteration engine
+└── README.md              # This file
+```
+
+## 🎯 Future Enhancements
+
+### Planned Features
+- [ ] Expand remaining syllables to 8+ kanji options
+- [ ] Add more yōon+n combinations (kyan, shun, chan, etc.)
 - [ ] Export/import custom translation dictionary
-- [ ] Show romaji preview before kanji selection
-- [ ] Track most-used kanji combinations
-- [ ] Print-optimized view for name lists
+- [ ] Print-optimized view for calligraphy reference
+- [ ] Multiple result templates (vertical/horizontal)
+- [ ] Stroke order animations
 
-## 💬 Questions?
+### Database Expansion
+- [ ] Enhance K-row (ka, ki, ku, ke, ko) to 8+ options
+- [ ] Enhance S-row, T-row, N-row, M-row, R-row
+- [ ] Add rare kanji for advanced users
+- [ ] Include kanji variants (e.g., 斎 vs 斉)
 
-Feel free to:
-- Ask about specific implementation details
-- Request additional language support
-- Suggest more names for the dictionary
-- Report any edge cases you find
+## 🤝 Contributing
 
----
+Contributions are welcome! Areas where you can help:
+- Add more kanji with positive meanings
+- Improve phonetic rules for additional languages
+- Suggest UI/UX improvements
+- Report bugs or edge cases
 
-## 📋 File Manifest
+## � License
 
-```
-transliteration-engine.js      (15 KB) - Core phonetic engine
-script-updated.js              (17 KB) - Updated main application
-index-updated.html             (3.3 KB) - Updated HTML with language selector
-language-selector-styles.css   (818 B) - CSS for language dropdown
-PR_DESCRIPTION.md              (5.2 KB) - Technical overview
-QUICK_START.md                 (7.0 KB) - Setup and usage guide
-BEFORE_AFTER_EXAMPLES.md       (8.1 KB) - Comparison examples
-README.md                      (This file) - Master overview
-```
+This project is open source and available for personal and commercial use.
 
-**Total size:** ~57 KB (minimal impact!)
+## 💝 Credits
+
+Created with ♥ for Japanese calligraphy artists  
+Special thanks to all contributors
 
 ---
 
-## 🌸 Happy Coding & Happy Valentine's Day!
-
-Made with ♥ by Chase for his wife's shodo business  
-February 2025
+**Made for calligraphers, by a developer who loves his wife's art** 🌸
