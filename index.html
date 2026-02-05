@@ -25,7 +25,19 @@
         <main>
             <section class="input-section">
                 <div class="input-group">
-                    <label for="nameInput">Enter a name:</label>
+                    <!-- Input mode toggle -->
+                    <div class="input-mode-selector">
+                        <label>
+                            <input type="radio" name="inputMode" value="english" checked>
+                            English Name
+                        </label>
+                        <label>
+                            <input type="radio" name="inputMode" value="katakana">
+                            Katakana (カタカナ)
+                        </label>
+                    </div>
+                    
+                    <label for="nameInput" id="inputLabel">Enter a name:</label>
                     <input 
                         type="text" 
                         id="nameInput" 
@@ -33,8 +45,8 @@
                         autocomplete="off"
                     >
                     
-                    <!-- Optional language hint selector -->
-                    <div class="language-selector">
+                    <!-- Optional language hint selector (only for English mode) -->
+                    <div class="language-selector" id="languageSelector">
                         <label for="languageHint" style="font-size: 0.9rem; font-weight: normal;">
                             Language hint (optional):
                         </label>
@@ -74,7 +86,7 @@
 
     <!-- Load scripts in correct order -->
     <script src="kanji-database.js"></script>
-    <script src="transliteration-engine.js"></script>
+    <script src="translation-engine.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

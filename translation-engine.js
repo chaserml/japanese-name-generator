@@ -206,7 +206,7 @@ class TransliterationEngine {
     addVowelsToConsonants(text) {
         let result = '';
         const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
-        const consonants = 'bcdfghjkmnprstvwyz';
+        const consonants = 'bcdfghjkmpqrstvwxyz';
         
         for (let i = 0; i < text.length; i++) {
             const char = text[i];
@@ -214,9 +214,19 @@ class TransliterationEngine {
             
             result += char;
             
-            // If this is a consonant and next is not a vowel (and not 'n' at end)
+            // 'n' can stand alone in Japanese, skip it
+            if (char === 'n') {
+                continue;
+            }
+            
+            // If this is a consonant and next is not a vowel, add a vowel
             if (consonants.includes(char)) {
                 if (!nextChar || !vowels.has(nextChar)) {
+                    // Special handling for 'l' → should not add vowel, it's mapped to 'r' which needs context
+                    if (char === 'l') {
+                        continue;
+                    }
+                    
                     // Add 'u' for most consonants, 'o' for some
                     if (['t', 'd', 'k', 'g'].includes(char)) {
                         result += 'o';
@@ -313,6 +323,13 @@ class TransliterationEngine {
             "samuel": "samyueru",
             "nicholas": "nikorasu",
             "jonathan": "jonasan",
+            "julian": "jurian",
+            "ashley": "ashuri",        // アシュリー (uses shu, not she)
+            "michelle": "misheru",     // ミシェル (uses she)
+            "shelley": "sherii",       // シェリー (uses she)
+            "chelsea": "cherushii",    // チェルシー (uses che)
+            "shannon": "shanon",       // シャノン (uses sha)
+            "sharon": "sharon",        // シャロン (uses sha)
             
             // German names
             "klaus": "kurausu",
