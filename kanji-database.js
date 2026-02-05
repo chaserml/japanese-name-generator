@@ -44,6 +44,45 @@ const kanjiDatabase = {
     { kanji: "織", meaning: "weave, fabric", romaji: "ori" }
   ],
   
+  // Vowel + N combinations
+  "an": [
+    { kanji: "杏", meaning: "apricot, elegant", romaji: "an" },
+    { kanji: "安", meaning: "peace, calm", romaji: "an" },
+    { kanji: "庵", meaning: "hermitage, retreat", romaji: "an" },
+    { kanji: "案", meaning: "plan, idea", romaji: "an" },
+    { kanji: "暗", meaning: "dark, shadow", romaji: "an" },
+    { kanji: "闇", meaning: "darkness, mystery", romaji: "an" }
+  ],
+  "en": [
+    { kanji: "円", meaning: "circle, round", romaji: "en" },
+    { kanji: "縁", meaning: "connection, fate", romaji: "en" },
+    { kanji: "園", meaning: "garden, park", romaji: "en" },
+    { kanji: "宴", meaning: "banquet, feast", romaji: "en" },
+    { kanji: "演", meaning: "perform, act", romaji: "en" },
+    { kanji: "援", meaning: "help, assist", romaji: "en" }
+  ],
+  "in": [
+    { kanji: "音", meaning: "sound, music", romaji: "in" },
+    { kanji: "印", meaning: "seal, stamp", romaji: "in" },
+    { kanji: "因", meaning: "cause, reason", romaji: "in" },
+    { kanji: "院", meaning: "institution, temple", romaji: "in" },
+    { kanji: "隠", meaning: "hide, conceal", romaji: "in" },
+    { kanji: "韻", meaning: "rhyme, rhythm", romaji: "in" }
+  ],
+  "on": [
+    { kanji: "音", meaning: "sound, music", romaji: "on" },
+    { kanji: "恩", meaning: "grace, blessing", romaji: "on" },
+    { kanji: "温", meaning: "warm, gentle", romaji: "on" },
+    { kanji: "穏", meaning: "calm, peaceful", romaji: "on" },
+    { kanji: "遠", meaning: "distant, far", romaji: "on" }
+  ],
+  "un": [
+    { kanji: "運", meaning: "luck, fortune", romaji: "un" },
+    { kanji: "雲", meaning: "cloud", romaji: "un" },
+    { kanji: "温", meaning: "warm, gentle", romaji: "un" },
+    { kanji: "海", meaning: "ocean, sea", romaji: "umi" }
+  ],
+  
   // Ka-row
   "ka": [
     { kanji: "花", meaning: "flower, blossom", romaji: "ka" },

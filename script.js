@@ -53,83 +53,85 @@ class JapaneseNameGenerator {
 
     // Convert English name to Japanese syllables
     nameToSyllables(name) {
-        name = name.toLowerCase().trim();
+        // Step 1: Convert English name to romaji using Wanakana
+        // Wanakana will handle L→R conversion and proper phonetics
+        const romaji = wanakana.toRomaji(name.toLowerCase().trim());
+        
+        // Step 2: Parse romaji into proper Japanese syllables
+        // Must handle: CV (consonant+vowel), V (vowel alone), and CVN (consonant+vowel+n)
         const syllables = [];
         let i = 0;
-
-        // Three-letter syllable combinations in Japanese
-        const threeLetterSyllables = [
-            'jyu', 'kya', 'kyu', 'kyo', 'sha', 'shu', 'sho', 
-            'cha', 'chu', 'cho', 'nya', 'nyu', 'nyo', 'hya', 
-            'hyu', 'hyo', 'mya', 'myu', 'myo', 'rya', 'ryu', 
-            'ryo', 'gya', 'gyu', 'gyo', 'bya', 'byu', 'byo', 
-            'pya', 'pyu', 'pyo'
-        ];
-
-        // Common two-letter combinations in Japanese
-        const twoLetterSyllables = [
-            'ka', 'ki', 'ku', 'ke', 'ko',
-            'sa', 'shi', 'su', 'se', 'so',
-            'ta', 'chi', 'tsu', 'te', 'to',
-            'na', 'ni', 'nu', 'ne', 'no',
-            'ha', 'hi', 'fu', 'he', 'ho',
-            'ma', 'mi', 'mu', 'me', 'mo',
-            'ya', 'yu', 'yo',
-            'ra', 'ri', 'ru', 're', 'ro',
-            'wa', 'wi', 'we', 'wo',
-            'ga', 'gi', 'gu', 'ge', 'go',
-            'za', 'ji', 'zu', 'ze', 'zo',
-            'da', 'di', 'du', 'de', 'do',
-            'ba', 'bi', 'bu', 'be', 'bo',
-            'pa', 'pi', 'pu', 'pe', 'po',
-            'ju', 'ja', 'jo'
-        ];
-
-        while (i < name.length) {
+        
+        while (i < romaji.length) {
             let matched = false;
-
-            // Try to match three-letter syllables first
-            if (i < name.length - 2) {
-                const threeChar = name.substring(i, i + 3);
-                if (threeLetterSyllables.includes(threeChar) && this.kanjiDatabase[threeChar]) {
-                    syllables.push(threeChar);
+            
+            // Try 3-letter syllables first (kya, kyu, kyo, sha, shu, etc.)
+            if (i <= romaji.length - 3) {
+                const threeLetter = romaji.substring(i, i + 3);
+                if (this.kanjiDatabase[threeLetter]) {
+                    syllables.push(threeLetter);
                     i += 3;
                     matched = true;
                 }
             }
-
-            // Try to match two-letter syllables
-            if (!matched && i < name.length - 1) {
-                const twoChar = name.substring(i, i + 2);
-                if (twoLetterSyllables.includes(twoChar) && this.kanjiDatabase[twoChar]) {
-                    syllables.push(twoChar);
+            
+            // Try 2-letter syllables (ka, ki, ku, ju, ri, etc.)
+            if (!matched && i <= romaji.length - 2) {
+                const twoLetter = romaji.substring(i, i + 2);
+                
+                // Check if it's consonant+vowel+n pattern (an, en, in, on, un)
+                if (i <= romaji.length - 3) {
+                    const vowelPlusN = romaji.substring(i, i + 3);
+                    const lastChar = vowelPlusN.charAt(2);
+                    const vowels = ['a', 'e', 'i', 'o', 'u'];
+                    
+                    // If pattern is vowel+n (like "an", "en"), treat as one syllable
+                    if (vowels.includes(vowelPlusN.charAt(0)) && lastChar === 'n') {
+                        if (this.kanjiDatabase[vowelPlusN]) {
+                            syllables.push(vowelPlusN);
+                            i += 3;
+                            matched = true;
+                        }
+                    }
+                }
+                
+                // Standard 2-letter syllable
+                if (!matched && this.kanjiDatabase[twoLetter]) {
+                    syllables.push(twoLetter);
                     i += 2;
                     matched = true;
                 }
             }
-
-            // If no two-letter or three-letter match, try single letter
+            
+            // Try single letter (vowels: a, i, u, e, o)
             if (!matched) {
-                const oneChar = name.charAt(i);
+                const oneLetter = romaji.charAt(i);
+                const vowels = ['a', 'e', 'i', 'o', 'u'];
                 
-                // Map common English letters to Japanese syllables
-                const letterMap = {
-                    'a': 'a', 'b': 'ba', 'c': 'ka', 'd': 'da', 'e': 'e',
-                    'f': 'fu', 'g': 'ga', 'h': 'ha', 'i': 'i', 'j': 'ju',
-                    'k': 'ka', 'l': 'ra', 'm': 'ma', 'n': 'na', 'o': 'o',
-                    'p': 'pa', 'q': 'ku', 'r': 'ra', 's': 'sa', 't': 'ta',
-                    'u': 'u', 'v': 'ba', 'w': 'wa', 'x': 'ku', 'y': 'ya',
-                    'z': 'za'
-                };
-
-                const mappedSyllable = letterMap[oneChar] || 'a';
-                if (this.kanjiDatabase[mappedSyllable]) {
-                    syllables.push(mappedSyllable);
+                // Check if next char is 'n' and this is a vowel (to form an, en, in, on, un)
+                if (vowels.includes(oneLetter) && i < romaji.length - 1 && romaji.charAt(i + 1) === 'n') {
+                    const vowelN = oneLetter + 'n';
+                    if (this.kanjiDatabase[vowelN]) {
+                        syllables.push(vowelN);
+                        i += 2;
+                        matched = true;
+                    }
                 }
-                i++;
+                
+                // Single vowel
+                if (!matched && this.kanjiDatabase[oneLetter]) {
+                    syllables.push(oneLetter);
+                    i++;
+                    matched = true;
+                }
+                
+                // Skip unmatched characters
+                if (!matched) {
+                    i++;
+                }
             }
         }
-
+        
         return syllables;
     }
 
