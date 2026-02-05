@@ -583,8 +583,8 @@ const kanjiDatabase = {
     { kanji: "需", meaning: "demand, request", romaji: "jyu" }
   ],
   "ja": [
-    { kanji: "蛇", meaning: "wisdom, serpent", romaji: "ja" },
-    { kanji: "邪", meaning: "righteousness, justice", romaji: "ja" },
+    { kanji: "蛇", meaning: "snake, serpent", romaji: "ja" },
+    { kanji: "邪", meaning: "wicked, evil", romaji: "ja" },
     { kanji: "斜", meaning: "diagonal, slanting", romaji: "sha" },
     { kanji: "謝", meaning: "gratitude, apology", romaji: "sha" },
     { kanji: "社", meaning: "company, society", romaji: "sha" },
@@ -700,8 +700,8 @@ const kanjiDatabase = {
   "nya": [
     { kanji: "若", meaning: "young, if", romaji: "nyaku" },
     { kanji: "弱", meaning: "weak, frail", romaji: "nyaku" },
-    { kanji: "雀", meaning: "sparrow", romaji: "jak" },
-    { kanji: "惹", meaning: "attract, captivate", romaji: "jak" },
+    { kanji: "雀", meaning: "sparrow", romaji: "jaku" },
+    { kanji: "惹", meaning: "attract, captivate", romaji: "jaku" },
     { kanji: "寂", meaning: "loneliness, quiet", romaji: "jaku" }
   ],
   "nyu": [
@@ -823,8 +823,7 @@ const kanjiDatabase = {
     { kanji: "漁", meaning: "fishing, catch fish", romaji: "gyo" },
     { kanji: "行", meaning: "go, conduct", romaji: "gyo" },
     { kanji: "業", meaning: "business, work", romaji: "gyo" },
-    { kanji: "仰", meaning: "look up, respect", romaji: "gyo" },
-    { kanji: "暁", meaning: "dawn, daybreak", romaji: "gyo" }
+    { kanji: "仰", meaning: "look up, respect", romaji: "gyo" }
   ],
 
   // B-row combinations
