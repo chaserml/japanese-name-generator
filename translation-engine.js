@@ -69,9 +69,13 @@ class TransliterationEngine {
             { pattern: /ch/g, replacement: 'ch' },          // Chase → Cheisu (keep as-is)
             { pattern: /sh/g, replacement: 'sh' },          // Sharon → Sharon
             { pattern: /gh/g, replacement: '' },            // Leigh → Lei
-            { pattern: /ck/g, replacement: 'kku' },         // Jack → Jakku
+            { pattern: /ck/g, replacement: 'ku' },          // Jack → Jaku (changed from kku)
             { pattern: /qu/g, replacement: 'kw' },          // Quinn → Kwin
             { pattern: /x/g, replacement: 'kusu' },         // Alex → Arekusu
+            { pattern: /tt/g, replacement: 'to' },          // Wyatt → Waiato
+            { pattern: /ss/g, replacement: 'su' },          // Jessica → Jesika
+            { pattern: /zz/g, replacement: 'zu' },          // Pizza → Piza
+            { pattern: /dd/g, replacement: 'do' },          // Maddie → Madie
             
             // Handle 'c' based on following letter
             { pattern: /c([eiy])/g, replacement: 's$1' },   // Alice → Alisu, Cynthia → Synsya
@@ -192,6 +196,9 @@ class TransliterationEngine {
             'v': 'b',     // V → B (no V sound in Japanese)
             'th': 's',    // TH → S (catch any remaining)
             'f': 'fu',    // F needs a vowel
+            'w': 'u',     // W → U (becomes 'u' sound)
+            'c': 'ku',    // C → KU (if not already handled)
+            'z': 'zu',    // Z → ZU
         };
         
         Object.entries(letterMap).forEach(([key, value]) => {
@@ -356,9 +363,54 @@ class TransliterationEngine {
             "ashley": "ashuri",        // アシュリー (uses shu, not she)
             "michelle": "misheru",     // ミシェル (uses she)
             "shelley": "sherii",       // シェリー (uses she)
-            "chelsea": "cherushii",    // チェルシー (uses che)
             "shannon": "shanon",       // シャノン (uses sha)
             "sharon": "sharon",        // シャロン (uses sha)
+            "chelsea": "cherushi",
+            "mackenzie": "makenzi",
+            "alejandro": "arehando",
+            "francisco": "furanshisuko",
+            
+            // More common English names (201-700 range)
+            "shawn": "shon",
+            "crystal": "kurisutaru",
+            "victor": "bikuta",
+            "clarence": "kurarensu",
+            "craig": "kuregu",
+            "clara": "kurara",
+            "dawn": "don",
+            "leah": "ria",
+            "isaiah": "aizaia",
+            "alexandra": "arekusandora",
+            "chad": "chado",
+            "michele": "misheru",
+            "jeremiah": "jeremaia",
+            "charlie": "chari",
+            "claire": "kurea",
+            "wyatt": "waiato",
+            "clifford": "kurifodo",
+            "savannah": "sabana",
+            "chris": "kurisu",
+            "mitchell": "micheru",
+            "micheal": "maikeru",
+            "clyde": "kuraido",
+            "mackenzie": "makenj",
+            "alejandro": "arehando",
+            "josiah": "josia",
+            "francisco": "furanshisuko",
+            "clayton": "kureiton",
+            "charlene": "shariin",
+            "micah": "maika",
+            "claudia": "kurodia",
+            "chester": "chesuta",
+            "mariah": "maraia",
+            "hector": "hekuta",
+            "hudson": "hadoson",
+            "aaliyah": "ariya",
+            "ashton": "ashuton",
+            "alexandria": "arekusandoria",
+            "whitney": "houitoni",
+            "christy": "kurisuti",
+            "maxwell": "makuseru",
             
             // German names
             "klaus": "kurausu",
