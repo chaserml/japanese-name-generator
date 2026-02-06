@@ -15,28 +15,71 @@ const TransliterationEngine = require('./translation-engine.js');
 // Create an instance
 const engine = new TransliterationEngine();
 
-// Top 200 names from name95pct.txt
-const top200Names = [
-    "James", "John", "Robert", "Michael", "William", "Mary", "David", "Joseph", "Richard", "Charles",
-    "Thomas", "Christopher", "Daniel", "Elizabeth", "Matthew", "Patricia", "George", "Anthony", "Jennifer", "Linda",
-    "Barbara", "Donald", "Paul", "Mark", "Andrew", "Edward", "Steven", "Kenneth", "Margaret", "Joshua",
-    "Kevin", "Brian", "Susan", "Dorothy", "Sarah", "Timothy", "Ronald", "Jason", "Jessica", "Helen",
-    "Nancy", "Betty", "Karen", "Ryan", "Jacob", "Jeffrey", "Lisa", "Nicholas", "Frank", "Anna",
-    "Gary", "Emily", "Eric", "Sandra", "Ashley", "Jonathan", "Stephen", "Kimberly", "Ruth", "Donna",
-    "Carol", "Benjamin", "Michelle", "Samuel", "Larry", "Laura", "Justin", "Amanda", "Raymond", "Scott",
-    "Brandon", "Emma", "Melissa", "Henry", "Rebecca", "Jack", "Stephanie", "Deborah", "Alexander", "Sharon",
-    "Kathleen", "Gregory", "Cynthia", "Amy", "Shirley", "Patrick", "Angela", "Catherine", "Virginia", "Katherine",
-    "Walter", "Evelyn", "Jerry", "Dennis", "Tyler", "Aaron", "Brenda", "Frances", "Pamela", "Willie",
-    "Nicole", "Jose", "Samantha", "Peter", "Christine", "Alice", "Nathan", "Adam", "Rachel", "Maria",
-    "Douglas", "Janet", "Carolyn", "Kelly", "Olivia", "Harold", "Martha", "Debra", "Zachary", "Arthur",
-    "Marie", "Jordan", "Grace", "Heather", "Victoria", "Terry", "Diane", "Noah", "Julie", "Joyce",
-    "Carl", "Rose", "Kyle", "Albert", "Joan", "Jean", "Christina", "Lauren", "Ethan", "Julia",
-    "Lillian", "Ann", "Christian", "Doris", "Joe", "Lawrence", "Hannah", "Kathryn", "Judith", "Mildred",
-    "Gerald", "Andrea", "Jeremy", "Roger", "Jesse", "Taylor", "Megan", "Charlotte", "Cheryl", "Austin",
-    "Keith", "Sara", "Dylan", "Jacqueline", "Sophia", "Sean", "Harry", "Madison", "Teresa", "Gloria",
-    "Ralph", "Logan", "Alexis", "Roy", "Abigail", "Louis", "Janice", "Isabella", "Theresa", "Gabriel",
-    "Bryan", "Billy", "Bruce", "Judy", "Eugene", "Leslie", "Beverly", "Jane", "Natalie", "Ruby",
-    "Amber", "Denise", "Marilyn", "Danielle", "Elijah", "Diana", "Juan", "Alan", "Brittany", "Vincent"
+// Names 201-700 from name95pct.txt
+const testNames = [
+    "Angel", "Russell", "Annie", "Jamie", "Irene", "Wayne", "Howard", "Shannon",
+    "Ella", "Kayla", "Fred", "Philip", "Lori", "Cameron", "Tiffany", "Florence",
+    "Mason", "Shawn", "Robin", "Louise", "Liam", "Ava", "Lois", "Kathy",
+    "Randy", "Tammy", "Crystal", "Bonnie", "Victor", "Eleanor", "Josephine", "Isaac",
+    "Erin", "Anne", "Bobby", "Phyllis", "Lucas", "Johnny", "Allison", "Caleb",
+    "Francis", "Luke", "Martin", "Alyssa", "Bradley", "Tracy", "Phillip", "Travis",
+    "Carlos", "Audrey", "Clarence", "Theodore", "Ernest", "Stanley", "Craig", "Dale",
+    "Mia", "Hazel", "Clara", "Edna", "Cody", "Lee", "Leonard", "Alex",
+    "Peggy", "Tina", "Luis", "Earl", "Jackson", "Jimmy", "Dawn", "Evan",
+    "Danny", "Nathaniel", "Rita", "Eva", "Adrian", "Todd", "Wanda", "Paula",
+    "Courtney", "Jessie", "Joel", "Ethel", "Norma", "Ellen", "Marjorie", "Connie",
+    "Hunter", "Allen", "Valerie", "Jayden", "Edith", "Esther", "Amelia", "Morgan",
+    "Gladys", "Carrie", "Frederick", "Brianna", "Wendy", "Antonio", "Curtis", "Elaine",
+    "Vanessa", "Marion", "Melanie", "Julian", "Jasmine", "Cindy", "Oliver", "Marvin",
+    "Aiden", "Norman", "Ian", "Tony", "Leo", "Leah", "Monica", "Glenn",
+    "Isaiah", "Chloe", "Rodney", "Caroline", "Edwin", "Melvin", "Dana", "Wesley",
+    "Alexandra", "Sylvia", "Alfred", "Jesus", "April", "Steve", "Chad", "Marcus",
+    "Katie", "Riley", "Sheila", "Owen", "Derek", "Lynn", "Connor", "Erica",
+    "Lucille", "Jeffery", "Lucy", "Sherry", "Alicia", "Avery", "Herbert", "Vivian",
+    "Eddie", "Pauline", "Thelma", "Michele", "Ricky", "Veronica", "Jeremiah", "Kristen",
+    "Charlie", "Suzanne", "Calvin", "Troy", "Anita", "Kim", "Dolores", "Oscar",
+    "Joanne", "Geraldine", "Gail", "Claire", "Lorraine", "Carter", "Ray", "Sebastian",
+    "Dustin", "Bertha", "Rhonda", "Juanita", "Jill", "June", "Levi", "Mike",
+    "Jared", "Holly", "Sally", "Darlene", "Madeline", "Blake", "Wyatt", "Stella",
+    "Leroy", "Bernard", "Randall", "Brooke", "Jay", "Shane", "Beatrice", "Corey",
+    "Casey", "Dean", "Manuel", "Dominic", "Ronnie", "Clifford", "Miguel", "Eileen",
+    "Savannah", "Elsie", "Gavin", "Ida", "Debbie", "Nora", "Renee", "Naomi",
+    "Sydney", "Stacy", "Bernice", "Landon", "Lydia", "Regina", "Warren", "Lily",
+    "Chase", "Barry", "Leon", "Tommy", "Kristin", "Jo", "Hailey", "Sofia",
+    "Violet", "Rosa", "Gertrude", "Loretta", "Tara", "Molly", "Devin", "Roberta",
+    "Cassandra", "Bessie", "Cathy", "Jackie", "Chris", "Annette", "Jon", "Don",
+    "Laurie", "Kaitlyn", "Max", "Seth", "Alma", "Lindsey", "Mitchell", "Shelby",
+    "Georgia", "Jeanette", "Jeanne", "Colleen", "Chelsea", "Pearl", "Aubrey", "Brett",
+    "Rosemary", "Alvin", "Jerome", "Lloyd", "Stacey", "Trevor", "Bill", "Darrell",
+    "Haley", "Minnie", "Agnes", "Beth", "Lillie", "Addison", "Carmen", "Zoe",
+    "Xavier", "Parker", "Erik", "Joann", "Edgar", "Yvonne", "Micheal", "Daisy",
+    "Lewis", "Floyd", "Kelsey", "Gordon", "Cora", "Jim", "Vicki", "Gina",
+    "Nellie", "Cole", "Destiny", "Mario", "Johnnie", "Eli", "Carla", "Heidi",
+    "Colton", "Clyde", "Ivan", "Jenna", "Vera", "Vernon", "Mackenzie", "Paige",
+    "Terri", "Faith", "Ricardo", "Derrick", "Sadie", "Lena", "Alejandro", "Sue",
+    "Maureen", "Hayden", "Josiah", "Autumn", "Arlene", "Marian", "Joy", "Francisco",
+    "Sabrina", "Franklin", "Mabel", "Marc", "Wilma", "Tom", "Brent", "Constance",
+    "Kaylee", "Gabrielle", "Jorge", "Harper", "Clayton", "Maurice", "Peyton", "Carson",
+    "Kristina", "Myrtle", "Herman", "Melinda", "Brayden", "Garrett", "Lindsay", "Jimmie",
+    "Gabriella", "Grant", "Billie", "Sophie", "Deanna", "Charlene", "Katelyn", "Gene",
+    "Cory", "Mattie", "Marcia", "Colin", "Viola", "Nina", "Everett", "Dakota",
+    "Isabel", "Andre", "Lester", "Alexa", "Tamara", "Elmer", "Nolan", "Bailey",
+    "Marlene", "Gilbert", "Tristan", "Micah", "Jake", "Claudia", "Spencer", "Sam",
+    "Jennie", "Harvey", "Grayson", "Patsy", "Glen", "Bryce", "Erika", "Angelina",
+    "Brooklyn", "Diego", "Gwendolyn", "Layla", "Genevieve", "Preston", "Priscilla", "Maggie",
+    "Chester", "Jaime", "Marissa", "Tonya", "Kylie", "Elias", "Jeff", "Aidan",
+    "Maya", "Cooper", "Milton", "Ariana", "Delores", "Camila", "Tanya", "Miles",
+    "Miriam", "Alison", "Ruben", "Duane", "Mateo", "Maxine", "Mae", "Miranda",
+    "Mariah", "Cecil", "Yolanda", "Roberto", "Leona", "Madelyn", "Jocelyn", "Caitlin",
+    "Reginald", "Zoey", "Melody", "Joanna", "Carole", "Jaxon", "Ana", "Vickie",
+    "Eduardo", "Glenda", "Cecilia", "Brandy", "Sidney", "Hector", "Makayla", "Maxwell",
+    "Hudson", "Aaliyah", "Javier", "Dan", "Damian", "Bobbie", "Jade", "Dora",
+    "Margie", "Scarlett", "Ashton", "Isabelle", "Lance", "Ada", "Omar", "Asher",
+    "Neil", "Hattie", "Gianna", "Marsha", "Darren", "Arnold", "Alexandria", "Skylar",
+    "Whitney", "Penelope", "Elena", "Ezra", "Fernando", "Arianna", "Kay", "Abraham",
+    "Brandi", "Lincoln", "Kara", "Toni", "Karl", "Katrina", "Lonnie", "Kendall",
+    "Roland", "Bethany", "Ellie", "Penny", "Christy", "Sierra", "Nicolas", "Tanner",
+    "Ariel", "Roman", "Kerry", "Iris"
 ];
 
 // Syllable parser (simplified from script.js)
@@ -136,13 +179,13 @@ function romajiToSyllables(romaji) {
 }
 
 // Test results
-console.log("Testing Top 200 US Names\n");
+console.log("Testing Next 500 US Names (201-700)\n");
 console.log("=" .repeat(80));
 
 const issues = [];
 let totalTests = 0;
 
-top200Names.forEach((name, index) => {
+testNames.forEach((name, index) => {
     totalTests++;
     const romaji = engine.translateName(name, 'en');
     const syllables = romajiToSyllables(romaji);
@@ -162,7 +205,7 @@ top200Names.forEach((name, index) => {
     
     // Print progress every 50 names
     if ((index + 1) % 50 === 0) {
-        console.log(`Tested ${index + 1}/${top200Names.length} names...`);
+        console.log(`Tested ${index + 1}/${testNames.length} names...`);
     }
 });
 
