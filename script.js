@@ -196,8 +196,8 @@ class JapaneseNameGenerator {
             'man', 'min', 'mun', 'men', 'mon',
             // Y-row + n
             'yan', 'yun', 'yon',
-            // R-row + n
-            'ran', 'rin', 'run', 'ren', 'ron',
+            // R-row + n (removed 'rin' to allow ri-ni parsing)
+            'ran', 'run', 'ren', 'ron',
             // W-row + n
             'wan', 'won',
             // G-row + n (dakuten)
@@ -215,7 +215,7 @@ class JapaneseNameGenerator {
         // Common two-letter combinations in Japanese
         const twoLetterSyllables = [
             'ka', 'ki', 'ku', 'ke', 'ko',
-            'sa', 'shi', 'su', 'se', 'so',
+            'sa', 'shi', 'si', 'su', 'se', 'so',
             'ta', 'chi', 'tsu', 'te', 'to',
             'na', 'ni', 'nu', 'ne', 'no',
             'ha', 'hi', 'fu', 'he', 'ho',
