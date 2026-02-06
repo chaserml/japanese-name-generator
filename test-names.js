@@ -54,7 +54,7 @@ function romajiToSyllables(romaji) {
         'kan', 'kin', 'kun', 'ken', 'kon',
         'san', 'sen', 'son',
         'tan', 'ten', 'ton',
-        'nan', 'nin', 'nun', 'nen', 'non',
+        'nan', 'nun', 'nen', 'non',
         'han', 'hin', 'hun', 'hen', 'hon',
         'man', 'min', 'mun', 'men', 'mon',
         'yan', 'yun', 'yon',

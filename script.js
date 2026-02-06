@@ -189,7 +189,7 @@ class JapaneseNameGenerator {
             // T-row + n
             'tan', 'ten', 'ton',
             // N-row + n
-            'nan', 'nin', 'nun', 'nen', 'non',
+            'nan', 'nun', 'nen', 'non',
             // H-row + n
             'han', 'hin', 'hun', 'hen', 'hon',
             // M-row + n
