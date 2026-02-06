@@ -48,13 +48,11 @@
                     <!-- Optional language hint selector (only for English mode) -->
                     <div class="language-selector" id="languageSelector">
                         <label for="languageHint" style="font-size: 0.9rem; font-weight: normal;">
-                            Language hint (optional):
+                            Vowel system (optional):
                         </label>
                         <select id="languageHint" class="language-dropdown">
-                            <option value="en">English</option>
-                            <option value="de">German</option>
-                            <option value="hi">Hindi/Indian</option>
-                            <option value="la">Spanish/Latin</option>
+                            <option value="en">English vowels</option>
+                            <option value="la">Latin vowels</option>
                         </select>
                     </div>
                     
@@ -85,8 +83,8 @@
     </div>
 
     <!-- Load scripts in correct order -->
-    <script src="kanji-database.js"></script>
-    <script src="translation-engine.js"></script>
-    <script src="script.js"></script>
+    <script src="kanji-database.js?v=9"></script>
+    <script src="translation-engine.js?v=9"></script>
+    <script src="script.js?v=9"></script>
 </body>
 </html>

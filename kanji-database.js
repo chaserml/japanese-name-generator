@@ -123,6 +123,16 @@ const kanjiDatabase = {
     { kanji: "幸", meaning: "happiness, luck", romaji: "shi" },
     { kanji: "心", meaning: "heart, mind", romaji: "shin" }
   ],
+  "si": [
+    { kanji: "詩", meaning: "poem, poetry", romaji: "shi" },
+    { kanji: "志", meaning: "intention, will", romaji: "shi" },
+    { kanji: "史", meaning: "history, chronicle", romaji: "shi" },
+    { kanji: "司", meaning: "rule, director", romaji: "shi" },
+    { kanji: "紫", meaning: "purple, violet", romaji: "shi" },
+    { kanji: "獅", meaning: "lion", romaji: "shi" },
+    { kanji: "幸", meaning: "happiness, luck", romaji: "shi" },
+    { kanji: "心", meaning: "heart, mind", romaji: "shin" }
+  ],
   "su": [
     { kanji: "寿", meaning: "longevity, congratulations", romaji: "su" },
     { kanji: "純", meaning: "pure, genuine", romaji: "jun" },

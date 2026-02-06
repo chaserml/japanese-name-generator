@@ -63,15 +63,20 @@ class TransliterationEngine {
      */
     applyEnglishRules(name) {
         const rules = [
-            // Consonant digraphs and special combinations
-            { pattern: /th/g, replacement: 's' },           // Matthew → Masyu
+            // Consonant digraphs and special combinations (MUST come first)
+            { pattern: /th/g, replacement: 's' },           // Matthew → Mashu
             { pattern: /ph/g, replacement: 'f' },           // Philip → Firippu
             { pattern: /ch/g, replacement: 'ch' },          // Chase → Cheisu (keep as-is)
             { pattern: /sh/g, replacement: 'sh' },          // Sharon → Sharon
             { pattern: /gh/g, replacement: '' },            // Leigh → Lei
-            { pattern: /ck/g, replacement: 'k' },           // Jack → Jakku
+            { pattern: /ck/g, replacement: 'kku' },         // Jack → Jakku
             { pattern: /qu/g, replacement: 'kw' },          // Quinn → Kwin
-            { pattern: /x/g, replacement: 'ks' },           // Alex → Arekkusu
+            { pattern: /x/g, replacement: 'kusu' },         // Alex → Arekusu
+            
+            // Handle 'c' based on following letter
+            { pattern: /c([eiy])/g, replacement: 's$1' },   // Alice → Alisu, Cynthia → Synsya
+            { pattern: /c([aou])/g, replacement: 'k$1' },   // Carl → Karu, Carol → Karoru
+            { pattern: /c$/g, replacement: 'ku' },          // Eric → Eriku
             
             // Vowel combinations (must come before single vowel rules)
             { pattern: /oo/g, replacement: 'u' },           // Cooper → Kupa
@@ -88,7 +93,7 @@ class TransliterationEngine {
             { pattern: /([^aeiou])e$/g, replacement: '$1' }, // Kate → Kat
             
             // Common endings
-            { pattern: /ce$/g, replacement: 's' },          // Grace → Gureisu
+            { pattern: /ce$/g, replacement: 'su' },         // Grace → Gureisu
             { pattern: /ie$/g, replacement: 'i' },          // Katie → Keiti
             { pattern: /y$/g, replacement: 'i' },           // Emily → Emiri
             
@@ -271,7 +276,8 @@ class TransliterationEngine {
             "sarah": "sera",
             "emily": "emiri",
             "michael": "maikeru",
-            "david": "deibiddo",
+            "mike": "maiku",
+            "david": "deibido",
             "james": "jeimusu",
             "john": "jon",
             "robert": "robato",
@@ -283,7 +289,7 @@ class TransliterationEngine {
             "richard": "richado",
             "charles": "charuzu",
             "daniel": "danieru",
-            "matthew": "masyu",
+            "matthew": "mashu",
             "anthony": "ansoni",
             "donald": "donarudo",
             "steven": "sutiibun",
@@ -305,19 +311,42 @@ class TransliterationEngine {
             "lily": "riri",
             "natalie": "natari",
             "hannah": "hanna",
+            "nancy": "nansi",
+            "nina": "nina",
             "rachel": "reicheru",
             "madison": "madison",
             "chloe": "kuroe",
+            "charlotte": "sharuroto",
+            "cheryl": "sheriru",
+            "christina": "kurisutina",
+            "christian": "kurisuchan",
+            "christine": "kurisutin",
+            "cynthia": "sinsia",
+            "deborah": "debora",
+            "dorothy": "dorosi",
+            "elijah": "iraija",
+            "jacqueline": "jakurin",
+            "jessica": "jesika",
+            "lawrence": "rorensu",
+            "noah": "noa",
+            "patricia": "patorisia",
+            "rebecca": "rebeka",
+            "sean": "shon",
+            "timothy": "timosi",
+            "victoria": "bikutoria",
+            "zachary": "zakarai",
             "ryan": "raian",
             "jacob": "jeikobu",
             "tyler": "taira",
             "brandon": "burandon",
             "justin": "jasutin",
             "kevin": "kebin",
+            "kyle": "kairu",
+            "hugh": "hyu",
             "brian": "buraian",
             "nathan": "neisan",
             "jason": "jeison",
-            "jack": "jakku",
+            "jack": "jaku",
             "alexander": "arekusanda",
             "benjamin": "benjamin",
             "samuel": "samyueru",
@@ -369,6 +398,10 @@ class TransliterationEngine {
             "krishna": "kurishuna",
             "lakshmi": "rakushumi",
             "ganesh": "ganeshu",
+            "srini": "shurini",
+            "srinivas": "shurinibasu",
+            "sridhar": "shuridaru",
+            "sreeja": "shurija",
             
             // Spanish/Latin names
             "jose": "hose",
