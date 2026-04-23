@@ -421,7 +421,125 @@ class TransliterationEngine {
             "whitney": "houitoni",
             "christy": "kurisuti",
             "maxwell": "makuseru",
-            
+
+            // Names that the phonetic pipeline gets wrong
+            // Males
+            "thomas": "tomasu",       // th→s gives 'somasu'
+            "george": "joji",         // pipeline can't map g+e → j sound
+            "joseph": "josefu",
+            "mark": "maruku",
+            "edward": "edowado",      // w mid-word breaks pipeline
+            "kenneth": "kenesu",      // double-n gives extra syllable
+            "larry": "rari",          // double-r gives extra syllable
+            "raymond": "reimondo",    // ay→e loses the 'i'
+            "scott": "sukoto",
+            "henry": "henri",
+            "eric": "eriku",
+            "frank": "furanku",
+            "stephen": "sutiibun",
+            "patrick": "patoriku",
+            "walter": "woruta",       // w at start breaks pipeline
+            "dennis": "denisu",       // double-n
+            "jerry": "jeri",          // double-r
+            "terry": "teri",          // double-r
+            "aaron": "aron",          // double-a → parses as a+a+ro+n
+            "billy": "biri",          // double-l/r
+            "bobby": "bobi",          // double-b
+            "johnny": "joni",         // silent h + double-n
+            "willie": "wiri",         // w + double-l
+            "arthur": "asaa",         // th→s, silent r endings
+            "roger": "roja",          // g+e → j not handled
+            "wayne": "uein",          // ay→e loses shape
+            "howard": "howado",
+            "carl": "karu",
+            "albert": "arubato",
+            "leonard": "reonarudo",
+            "eugene": "yujin",
+            "philip": "firipu",
+            "phillip": "firipu",
+            "martin": "marutin",
+            "douglas": "dagurasu",    // ou→au distorts
+            "russell": "ruseru",      // double-s + double-l
+            "louis": "ruisu",         // silent o
+            "bradley": "buradori",
+            "jordan": "jodan",
+            "lauren": "roren",
+            "ethan": "esan",          // th→s gives 'esan' but correct
+            "dylan": "diran",
+            "alexis": "arekushisu",
+            "alyssa": "arissa",
+            "fred": "furedo",
+            "gilbert": "girubato",
+            "vincent": "binsento",
+            "travis": "torabisu",
+            "cody": "kodi",
+            "joel": "joeru",
+            "troy": "toroi",
+            "glen": "guren",
+            "jesse": "jese",
+            "corey": "kori",
+            "ricky": "riki",
+            "danny": "dani",
+            "randy": "randi",
+            "lee": "rii",
+            "jay": "jei",
+            "ray": "rei",
+
+            // Females
+            "barbara": "barubara",
+            "helen": "heren",
+            "betty": "beti",          // tt→to gives wrong syllable
+            "carol": "karoru",
+            "donna": "donna",
+            "diane": "daian",
+            "virginia": "bajinia",
+            "shirley": "sharii",
+            "kimberly": "kinbarii",
+            "stephanie": "sutefanii",
+            "evelyn": "eburin",
+            "susan": "suzan",
+            "joyce": "joisu",
+            "sylvia": "shirubia",
+            "irene": "airin",
+            "heather": "heza",
+            "tiffany": "tifanii",
+            "amber": "amba",
+            "holly": "hori",
+            "rose": "rozu",
+            "elaine": "erein",
+            "valerie": "barerii",
+            "morgan": "mogan",
+            "kayla": "kaira",
+            "ella": "era",
+            "kathleen": "kasuriin",
+            "laura": "rora",
+            "theresa": "teresa",
+            "carolyn": "karolin",
+            "audrey": "odori",
+            "martha": "marusa",
+            "ruth": "rusu",
+            "danielle": "danieru",
+            "denise": "denisu",
+            "marilyn": "marilin",
+            "bonnie": "boni",
+            "brenda": "burenda",
+            "lorraine": "rorein",
+            "phyllis": "firisu",
+            "tina": "tina",
+            "lori": "rori",
+            "sue": "su",
+            "kay": "kei",
+            "joy": "joi",
+            "gail": "geiru",
+            "leroy": "reroi",
+            "bertha": "beresa",
+            "dolores": "dorosu",
+            "megan": "megan",
+            "eleanor": "erinoa",
+            "josephine": "josefiinu",
+            "florence": "furensu",
+            "louise": "ruisu",
+
             // German names
             "klaus": "kurausu",
             "hans": "hansu",
