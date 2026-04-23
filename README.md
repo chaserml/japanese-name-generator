@@ -13,11 +13,13 @@ This tool helps convert any name into Japanese syllables and provides meaningful
 - **Katakana Input:** Direct katakana input for Japanese speakers
 
 ### 2. **Multi-Language Support**
-Intelligent phonetic rules for:
+Some intelligent phonetic rules for:
 - **English:** ch→che, th→s, proper vowel combinations
-- **German:** sch→sh, w→v, z→ts
-- **Hindi/Indian:** Aspirated consonants (bh, dh, th)
 - **Spanish/Latin:** j→h, ll→y, ñ→ny
+Todo:
+- **German:** sch→sh, w→v, z→ts
+- **Hindi:** Aspirated consonants (bh, dh, th)
+
 
 ### 3. **Comprehensive Kanji Database**
 - **120+ syllables** with full coverage

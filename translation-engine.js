@@ -24,8 +24,9 @@ class TransliterationEngine {
             return this.customTranslations[lowerName];
         }
         
-        // 2. Check common name dictionary
-        if (this.nameDict[lowerName]) {
+        // 2. Check common name dictionary (skip for Latin mode — dictionary uses
+        //    English-vowel romanizations which contradict Latin pure-vowel rules)
+        if (language !== 'la' && this.nameDict[lowerName]) {
             return this.nameDict[lowerName];
         }
         
@@ -157,6 +158,8 @@ class TransliterationEngine {
      */
     applyLatinRules(name) {
         const rules = [
+            { pattern: /h$/g, replacement: '' },            // Sarah → Sara (silent trailing h)
+            { pattern: /c([aou])/g, replacement: 'k$1' },   // Carlos → Karosu (hard c)
             { pattern: /ll/g, replacement: 'y' },           // Guillermo → Giyerumo
             { pattern: /ñ/g, replacement: 'ny' },           // Señor → Senyoru
             { pattern: /j/g, replacement: 'h' },            // José → Hose
