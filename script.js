@@ -232,7 +232,7 @@ class JapaneseNameGenerator {
             'da', 'di', 'du', 'de', 'do',
             'ba', 'bi', 'bu', 'be', 'bo',
             'pa', 'pi', 'pu', 'pe', 'po',
-            'ju', 'ja', 'jo', 'je',
+            'ju', 'ja', 'jo',
             'fa', 'fi', 'fe', 'fo',
             'va', 'vi', 'vu', 've', 'vo',
             'ti', 'tu',
@@ -259,9 +259,17 @@ class JapaneseNameGenerator {
             // Try to match two-letter syllables WITH look-ahead for 'n'
             if (!matched && i < romaji.length - 1) {
                 const twoChar = romaji.substring(i, i + 2);
-                
+
+                // "je" splits into two kanji: "ji" (ジ) + "e" (エ)
+                if (twoChar === 'je') {
+                    syllables.push('ji');
+                    if (this.kanjiDatabase['e']) syllables.push('e');
+                    i += 2;
+                    matched = true;
+                }
+
                 // Look ahead: if this two-letter syllable is followed by 'n', try three-letter combo first
-                if (i < romaji.length - 2 && romaji.charAt(i + 2) === 'n') {
+                if (!matched && i < romaji.length - 2 && romaji.charAt(i + 2) === 'n') {
                     const threeCharWithN = twoChar + 'n';
                     if (threeLetterSyllables.includes(threeCharWithN) && this.kanjiDatabase[threeCharWithN]) {
                         syllables.push(threeCharWithN);
