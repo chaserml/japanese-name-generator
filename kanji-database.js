@@ -370,6 +370,12 @@ const kanjiDatabase = {
   ],
   
   // Ra-row
+  "rai": [
+    { kanji: "来", meaning: "come, future", romaji: "rai" },
+    { kanji: "頼", meaning: "trust, rely", romaji: "rai" },
+    { kanji: "雷", meaning: "thunder, lightning", romaji: "rai" },
+    { kanji: "礼", meaning: "courtesy, gratitude", romaji: "rai" }
+  ],
   "ra": [
     { kanji: "羅", meaning: "silk, spread out", romaji: "ra" },
     { kanji: "楽", meaning: "comfort, music", romaji: "raku" },

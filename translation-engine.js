@@ -359,6 +359,7 @@ class TransliterationEngine {
             "kyle": "kairu",
             "hugh": "hyu",
             "brian": "buraian",
+            "bryan": "buraian",
             "nathan": "neisan",
             "jason": "jeison",
             "jack": "jaku",

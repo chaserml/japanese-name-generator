@@ -184,6 +184,8 @@ class JapaneseNameGenerator {
             'pya', 'pyu', 'pyo', 'she', 'che',
             // 3-character morae that must be matched before the 2-letter pass
             'shi', 'chi', 'tsu',
+            // Diphthong syllables used in Western name transliterations
+            'rai',
             // K-row + n
             'kan', 'kin', 'kun', 'ken', 'kon',
             // S-row + n
