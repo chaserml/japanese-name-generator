@@ -92,10 +92,11 @@ The most important decision in the pipeline is how to split a name into syllable
 |-------|-----------|---------------|
 | `he + re + n` | 3 kanji | `n` alone has few meaningful options |
 | `he + ren` | 2 kanji | `ren` → 蓮 (lotus), 廉 (honesty), 煉 (refine) |
-| `jo + r + dan` | 4 kanji | `r` has no standalone options |
-| `jo + dan` | 2 kanji | `dan` → 壇 (platform), 断 (resolve), 暖 (warmth) |
+| `jo + ru + dan` | 3 kanji | `ru` → 瑠 (lapis lazuli), 流 (flow), 琉 (precious stone) |
+| `bra + i + an` | 3 kanji | `i` alone has limited name-worthy options |
+| `bu + rai + an` | 3 kanji | `rai` → 来 (future), 頼 (trust), 雷 (thunder) |
 
-This is why the dictionary stores `helen → heren`, `jordan → jodan`, `julian → jurian`, and so on — the syllable boundaries are chosen for kanji quality, not strict phonetic splitting.
+This is why the dictionary stores `helen → heren`, `jordan → jorudan`, `brian → buraian`, and so on — the syllable boundaries are chosen for kanji quality, not strict phonetic splitting.
 
 ### Three-Stage Pipeline
 

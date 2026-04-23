@@ -462,7 +462,7 @@ class TransliterationEngine {
             "russell": "ruseru",      // double-s + double-l
             "louis": "ruisu",         // silent o
             "bradley": "buradori",
-            "jordan": "jodan",
+            "jordan": "jorudan",
             "lauren": "roren",
             "ethan": "esan",          // th→s gives 'esan' but correct
             "dylan": "diran",
