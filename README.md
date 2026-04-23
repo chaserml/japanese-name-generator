@@ -16,6 +16,7 @@ This tool helps convert any name into Japanese syllables and provides meaningful
 Some intelligent phonetic rules for:
 - **English:** ch→che, th→s, proper vowel combinations
 - **Spanish/Latin:** j→h, ll→y, ñ→ny
+
 Todo:
 - **German:** sch→sh, w→v, z→ts
 - **Hindi:** Aspirated consonants (bh, dh, th)
