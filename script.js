@@ -182,6 +182,8 @@ class JapaneseNameGenerator {
             'hyu', 'hyo', 'mya', 'myu', 'myo', 'rya', 'ryu', 
             'ryo', 'gya', 'gyu', 'gyo', 'bya', 'byu', 'byo', 
             'pya', 'pyu', 'pyo', 'she', 'che',
+            // 3-character morae that must be matched before the 2-letter pass
+            'shi', 'chi', 'tsu',
             // K-row + n
             'kan', 'kin', 'kun', 'ken', 'kon',
             // S-row + n
@@ -215,8 +217,8 @@ class JapaneseNameGenerator {
         // Common two-letter combinations in Japanese
         const twoLetterSyllables = [
             'ka', 'ki', 'ku', 'ke', 'ko',
-            'sa', 'shi', 'si', 'su', 'se', 'so',
-            'ta', 'chi', 'tsu', 'te', 'to',
+            'sa', 'si', 'su', 'se', 'so',
+            'ta', 'te', 'to',
             'na', 'ni', 'nu', 'ne', 'no',
             'ha', 'hi', 'fu', 'he', 'ho',
             'ma', 'mi', 'mu', 'me', 'mo',

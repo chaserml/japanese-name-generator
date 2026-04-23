@@ -197,7 +197,7 @@ class TransliterationEngine {
             'th': 's',    // TH → S (catch any remaining)
             'f': 'fu',    // F needs a vowel
             'w': 'u',     // W → U (becomes 'u' sound)
-            'c': 'ku',    // C → KU (if not already handled)
+            'c(?!h)': 'ku',    // C → KU (if not already handled; skip 'ch' digraph)
             'z': 'zu',    // Z → ZU
         };
         
@@ -236,6 +236,11 @@ class TransliterationEngine {
                 if (!nextChar || !vowels.has(nextChar)) {
                     // Special handling for 'l' → should not add vowel, it's mapped to 'r' which needs context
                     if (char === 'l') {
+                        continue;
+                    }
+
+                    // 'ch' and 'sh' are digraphs — don't insert a vowel between them
+                    if ((char === 'c' || char === 's') && nextChar === 'h') {
                         continue;
                     }
                     
@@ -366,6 +371,7 @@ class TransliterationEngine {
             "shannon": "shanon",       // シャノン (uses sha)
             "sharon": "sharon",        // シャロン (uses sha)
             "chelsea": "cherushi",
+            "chelsey": "cherushi",
             "mackenzie": "makenzi",
             "alejandro": "arehando",
             "francisco": "furanshisuko",

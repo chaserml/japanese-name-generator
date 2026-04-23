@@ -1484,9 +1484,10 @@ const kanjiDatabase = {
     { kanji: "千", meaning: "thousand", romaji: "che" },
     { kanji: "知", meaning: "know, wisdom", romaji: "che" },
     { kanji: "智", meaning: "wisdom, intellect", romaji: "che" },
-    { kanji: "地", meaning: "earth, ground", romaji: "che" },
-    { kanji: "血", meaning: "blood, lineage", romaji: "che" },
-    { kanji: "誓", meaning: "pledge, oath", romaji: "che" }
+    { kanji: "恵", meaning: "blessing, grace", romaji: "che" },
+    { kanji: "澄", meaning: "clear, pure", romaji: "che" },
+    { kanji: "誓", meaning: "pledge, oath", romaji: "che" },
+    { kanji: "地", meaning: "earth, ground", romaji: "che" }
   ],
   "she": [
     { kanji: "朱", meaning: "vermillion, red", romaji: "she" },
