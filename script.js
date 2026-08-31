@@ -353,8 +353,11 @@ class JapaneseNameGenerator {
 
         this.currentName = nameInput;
 
-        // Check which input mode is selected
-        const inputMode = document.querySelector('input[name="inputMode"]:checked').value;
+        // Auto-detect katakana input even if English mode is selected
+        const hasKatakana = /[\u30A0-\u30FF]/.test(nameInput);
+        const inputMode = hasKatakana
+            ? 'katakana'
+            : document.querySelector('input[name="inputMode"]:checked').value;
         
         if (inputMode === 'katakana') {
             // Convert katakana directly to romaji syllables

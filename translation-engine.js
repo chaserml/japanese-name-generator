@@ -99,14 +99,13 @@ class TransliterationEngine {
             { pattern: /arke$/g, replacement: 'aaku' },     // Clarke → Claaku
             { pattern: /urke$/g, replacement: 'aaku' },     // Burke → Baaku
             { pattern: /erke$/g, replacement: 'aaku' },     // Berkeley stem
-            { pattern: /ake$/g, replacement: 'eiku' },      // Blake → Bleiku, Jake → Jeiku
+            { pattern: /ake$/g, replacement: 'eku' },       // Blake → Bureku
             { pattern: /ike$/g, replacement: 'aiku' },      // Mike → Maiku, Ike → Aiku
             { pattern: /eke$/g, replacement: 'iiku' },      // Zeke → Ziiku
-            { pattern: /oke$/g, replacement: 'oku' },       // -oke → oku
             { pattern: /uke$/g, replacement: 'uku' },       // Luke → Luku, Duke → Duku
             
-            // Silent e at end
-            { pattern: /([^aeiou])e$/g, replacement: '$1' }, // Kate → Kat
+            // Silent e at end (but not after k — keeps Chijioke → ke, not ko)
+            { pattern: /([^aeiouk])e$/g, replacement: '$1' }, // Kate → Kat
             
             // Common endings
             { pattern: /ce$/g, replacement: 'su' },         // Grace → Gureisu
@@ -304,8 +303,8 @@ class TransliterationEngine {
             "emily": "emiri",
             "michael": "maikeru",
             "mike": "maiku",
-            "blake": "bureiku",
-            "blayke": "bureiku",
+            "blake": "bureku",
+            "blayke": "bureku",
             "david": "deibido",
             "james": "jeimusu",
             "john": "jon",
