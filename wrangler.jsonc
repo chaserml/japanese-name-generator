@@ -1,0 +1,23 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "japanese-name-generator",
+	// Set this to today's date
+	"compatibility_date": "2026-08-31",
+	"workers_dev": true,
+	"preview_urls": true,
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "./dist",
+		"not_found_handling": "single-page-application"
+	},
+	// Apex ailondonstudio.com already hosts the studio site. This Worker
+	// attaches to a subdomain so the two can coexist on the same zone.
+	"routes": [
+		{
+			"pattern": "names.ailondonstudio.com",
+			"custom_domain": true
+		}
+	]
+}
