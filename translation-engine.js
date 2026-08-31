@@ -94,6 +94,17 @@ class TransliterationEngine {
             { pattern: /ou/g, replacement: 'au' },          // Louis → Rui
             { pattern: /ow/g, replacement: 'au' },          // Howard → Hauado
             
+            // English "-ke" endings: silent e, final /k/ → ku (not ke/ko)
+            // Must run before the generic silent-e strip, otherwise "blake" → "blak" → "burako"
+            { pattern: /arke$/g, replacement: 'aaku' },     // Clarke → Claaku
+            { pattern: /urke$/g, replacement: 'aaku' },     // Burke → Baaku
+            { pattern: /erke$/g, replacement: 'aaku' },     // Berkeley stem
+            { pattern: /ake$/g, replacement: 'eiku' },      // Blake → Bleiku, Jake → Jeiku
+            { pattern: /ike$/g, replacement: 'aiku' },      // Mike → Maiku, Ike → Aiku
+            { pattern: /eke$/g, replacement: 'iiku' },      // Zeke → Ziiku
+            { pattern: /oke$/g, replacement: 'oku' },       // -oke → oku
+            { pattern: /uke$/g, replacement: 'uku' },       // Luke → Luku, Duke → Duku
+            
             // Silent e at end
             { pattern: /([^aeiou])e$/g, replacement: '$1' }, // Kate → Kat
             
@@ -247,8 +258,9 @@ class TransliterationEngine {
                         continue;
                     }
                     
-                    // Add 'u' for most consonants, 'o' for some
-                    if (['t', 'd', 'k', 'g'].includes(char)) {
+                    // Final /t/ and /d/ take 'o' (ト/ド). Final /k/ and /g/
+                    // take 'u' (ク/グ) — "Mark" → maruku, not maruko.
+                    if (['t', 'd'].includes(char)) {
                         result += 'o';
                     } else {
                         result += 'u';
@@ -292,6 +304,8 @@ class TransliterationEngine {
             "emily": "emiri",
             "michael": "maikeru",
             "mike": "maiku",
+            "blake": "bureiku",
+            "blayke": "bureiku",
             "david": "deibido",
             "james": "jeimusu",
             "john": "jon",
@@ -631,6 +645,13 @@ class TransliterationEngine {
             "lance": "ransu",
             "levi": "rebi",
             "luke": "ruku",
+            "duke": "duuku",
+            "ike": "aiku",
+            "zeke": "jiiku",
+            "lake": "reiku",
+            "burke": "baaku",
+            "clarke": "kuraaku",
+            "spike": "supaiku",
             "max": "makusu",
             "cole": "koru",
             "derek": "dereku",
