@@ -1,5 +1,5 @@
-// Katakana is the source of truth: one mora → one kanji-database key.
-// Never flatten to romaji and re-parse (that mapped ケ → ko).
+// Katakana is tokenized to mora, then ン attaches like the old look-ahead
+// (アン → "an"). Never flatten to romaji and re-parse (that mapped ケ → ko).
 
 global.localStorage = {
     getItem: () => null,
@@ -29,14 +29,17 @@ const cases = [
     { input: 'ブレイク', syllables: ['bu', 're', 'i', 'ku'], kana: ['ブ', 'レ', 'イ', 'ク'] },
     { input: 'ブレク', syllables: ['bu', 're', 'ku'], kana: ['ブ', 'レ', 'ク'] },
     { input: 'サラ', syllables: ['sa', 'ra'], kana: ['サ', 'ラ'] },
-    { input: 'ケン', syllables: ['ke', 'n'], kana: ['ケ', 'ン'] },
-    { input: 'ジュリアン', syllables: ['ju', 'ri', 'a', 'n'], kana: ['ジュ', 'リ', 'ア', 'ン'] },
+    { input: 'ケン', syllables: ['ken'], kana: ['ケン'] },
+    { input: 'ジュリアン', syllables: ['ju', 'ri', 'an'], kana: ['ジュ', 'リ', 'アン'] },
+    { input: 'アンジェリ', syllables: ['an', 'je', 'ri'], kana: ['アン', 'ジェ', 'リ'] },
+    { input: 'アンジェリー', syllables: ['an', 'je', 'ri'], kana: ['アン', 'ジェ', 'リー'] },
+    { input: 'アンゲリ', syllables: ['an', 'ge', 'ri'], kana: ['アン', 'ゲ', 'リ'] },
     { input: 'キャ', syllables: ['kya'], kana: ['キャ'] },
     { input: 'ジェ', syllables: ['je'], kana: ['ジェ'] },
     { input: 'シェ', syllables: ['she'], kana: ['シェ'] },
     { input: 'チェ', syllables: ['che'], kana: ['チェ'] },
-    { input: 'キー', syllables: ['ki', 'i'], kana: ['キ', 'ー'] },
-    { input: 'ジャッキー', syllables: ['ja', 'ki', 'i'], kana: ['ジャ', 'キ', 'ー'] },
+    { input: 'キー', syllables: ['ki'], kana: ['キー'] },
+    { input: 'ジャッキー', syllables: ['ja', 'ki'], kana: ['ジャ', 'キー'] },
     { input: 'ちじおけ', syllables: ['chi', 'ji', 'o', 'ke'] },
     { input: 'チ・ジ・オ・ケ', syllables: ['chi', 'ji', 'o', 'ke'] },
 ];
@@ -81,6 +84,30 @@ try {
     failed++;
     console.error(`✗ ${err.message}`);
 }
+
+const groupingCases = [
+    { input: 'アンジェリー', syllables: ['an', 'je', 'ri'], kana: ['アン', 'ジェ', 'リー'] },
+    { input: 'ア・ン・ジェリー', syllables: ['a', 'n', 'je', 'ri'], kana: ['ア', 'ン', 'ジェ', 'リー'] },
+    { input: 'アン・ジェ・リー', syllables: ['an', 'je', 'ri'], kana: ['アン', 'ジェ', 'リー'] },
+    { input: 'ア ン ジェリー', syllables: ['a', 'n', 'je', 'ri'] },
+    { input: 'チジオケ', syllables: ['chi', 'ji', 'o', 'ke'] },
+    { input: 'チ・ジ・オ・ケ', syllables: ['chi', 'ji', 'o', 'ke'] },
+];
+
+groupingCases.forEach((testCase) => {
+    try {
+        const parsed = engine.groupKatakanaForKanji(testCase.input);
+        assertEqual(parsed.syllables, testCase.syllables, `${testCase.input} grouped syllables`);
+        if (testCase.kana) {
+            assertEqual(parsed.kana, testCase.kana, `${testCase.input} grouped kana`);
+        }
+        passed++;
+        console.log(`✓ group ${testCase.input} → ${parsed.syllables.join('-')}`);
+    } catch (err) {
+        failed++;
+        console.error(`✗ ${err.message}`);
+    }
+});
 
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

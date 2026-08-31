@@ -22,43 +22,49 @@ class JapaneseNameGenerator {
             if (e.key === 'Enter') this.convertName();
         });
         document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+        document.getElementById('manualKatakanaBtn').addEventListener('click', () => this.useManualKatakana());
+        document.getElementById('manualKatakana').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.useManualKatakana();
+        });
         
-        // Input mode toggle handler
         const inputModeRadios = document.querySelectorAll('input[name="inputMode"]');
         inputModeRadios.forEach(radio => {
             radio.addEventListener('change', (e) => this.handleInputModeChange(e.target.value));
         });
         
-        // Add language selector if it exists
         const langSelector = document.getElementById('languageHint');
         if (langSelector) {
             langSelector.addEventListener('change', () => {
-                // Re-convert if name is already entered
                 if (document.getElementById('nameInput').value) {
                     this.convertName();
                 }
             });
         }
+
+        const checked = document.querySelector('input[name="inputMode"]:checked');
+        this.applyInputMode(checked ? checked.value : 'katakana', false);
     }
 
-    // Handle input mode change between English and Katakana
     handleInputModeChange(mode) {
+        this.applyInputMode(mode, true);
+    }
+
+    applyInputMode(mode, clearInput) {
         const nameInput = document.getElementById('nameInput');
         const inputLabel = document.getElementById('inputLabel');
         const languageSelector = document.getElementById('languageSelector');
         
         if (mode === 'katakana') {
-            nameInput.placeholder = 'e.g., チェイス, サラ, マリア';
-            inputLabel.textContent = 'Enter name in katakana:';
+            nameInput.placeholder = 'e.g. アンジェリー or ア・ン・ジェリー';
+            inputLabel.textContent = 'Enter katakana (use ・ to choose kanji slots):';
             languageSelector.style.display = 'none';
         } else {
             nameInput.placeholder = 'e.g., Sarah, Klaus, Arjun, Maria';
-            inputLabel.textContent = 'Enter a name:';
+            inputLabel.textContent = 'Enter a roman-letter name:';
             languageSelector.style.display = 'block';
         }
         
-        // Clear input
-        nameInput.value = '';
+        if (clearInput) nameInput.value = '';
     }
 
     // Load favorites from localStorage
@@ -171,11 +177,11 @@ class JapaneseNameGenerator {
             'da', 'di', 'du', 'de', 'do',
             'ba', 'bi', 'bu', 'be', 'bo',
             'pa', 'pi', 'pu', 'pe', 'po',
-            'ju', 'ja', 'jo',
+            'ju', 'ja', 'jo', 'je',
             'fa', 'fi', 'fe', 'fo',
             'va', 'vi', 'vu', 've', 'vo',
             'ti', 'tu',
-            // Vowel + n combinations (for name endings)
+            // Vowel + n combinations (for name endings and mid-word ん)
             'an', 'in', 'un', 'en', 'on'
         ];
 
@@ -198,14 +204,6 @@ class JapaneseNameGenerator {
             // Try to match two-letter syllables WITH look-ahead for 'n'
             if (!matched && i < romaji.length - 1) {
                 const twoChar = romaji.substring(i, i + 2);
-
-                // "je" splits into two kanji: "ji" (ジ) + "e" (エ)
-                if (twoChar === 'je') {
-                    syllables.push('ji');
-                    if (this.kanjiDatabase['e']) syllables.push('e');
-                    i += 2;
-                    matched = true;
-                }
 
                 // Look ahead: if this two-letter syllable is followed by 'n', try three-letter combo first
                 if (!matched && i < romaji.length - 2 && romaji.charAt(i + 2) === 'n') {
@@ -282,8 +280,8 @@ class JapaneseNameGenerator {
         });
     }
 
-    // Convert name: kana and dictionary names go to kanji;
-    // unknown roman names pick a katakana spelling first.
+    // Katakana is primary: typed kana (optional ・ cuts) go to kanji grouping.
+    // Roman-letter mode still uses the dictionary / phonetic picker.
     convertName() {
         const nameInput = document.getElementById('nameInput').value;
         if (!nameInput.trim()) {
@@ -294,10 +292,24 @@ class JapaneseNameGenerator {
         this.currentName = nameInput;
         this.currentKanaSource = null;
         this.katakanaOptions = [];
+        document.getElementById('manualKatakana').value = '';
         this.hideStageSections();
+
+        const inputMode = document.querySelector('input[name="inputMode"]:checked');
+        const mode = inputMode ? inputMode.value : 'katakana';
 
         if (this.transliterator.isKanaInput(nameInput)) {
             this.showKanjiForKatakana(nameInput);
+            return;
+        }
+
+        if (mode === 'katakana') {
+            const reading = this.transliterator.romajiToKatakanaReading(nameInput);
+            if (!reading.katakana) {
+                this.showError('Could not read that spelling. Try katakana, e.g. アンジェリー');
+                return;
+            }
+            this.showKanjiForKatakana(reading.katakana);
             return;
         }
 
@@ -358,6 +370,30 @@ class JapaneseNameGenerator {
         });
     }
 
+    useManualKatakana() {
+        const raw = document.getElementById('manualKatakana').value.trim();
+        if (!raw) {
+            this.showError('Type a katakana spelling (or romaji) first');
+            return;
+        }
+
+        const cards = document.querySelectorAll('.katakana-card');
+        cards.forEach((card) => card.classList.remove('selected'));
+
+        if (this.transliterator.isKanaInput(raw)) {
+            this.showKanjiForKatakana(raw);
+            return;
+        }
+
+        const reading = this.transliterator.romajiToKatakanaReading(raw);
+        if (!reading.katakana) {
+            this.showError('Could not read that spelling. Try katakana, e.g. アンジェリー');
+            return;
+        }
+
+        this.showKanjiForKatakana(reading.katakana);
+    }
+
     selectKatakanaOption(index) {
         const option = this.katakanaOptions[index];
         if (!option) return;
@@ -371,7 +407,7 @@ class JapaneseNameGenerator {
     }
 
     showKanjiForKatakana(katakana) {
-        const parsed = this.transliterator.katakanaToSyllables(katakana);
+        const parsed = this.transliterator.groupKatakanaForKanji(katakana);
         this.currentSyllables = parsed.syllables;
         this.currentKanaSource = parsed.kana;
         this.showKanjiStage();
@@ -627,6 +663,7 @@ class JapaneseNameGenerator {
         this.currentKanaSource = null;
         this.katakanaOptions = [];
         this.currentName = '';
+        document.getElementById('manualKatakana').value = '';
         this.hideStageSections();
         
         // Clear any error messages

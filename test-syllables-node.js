@@ -38,7 +38,7 @@ function romajiToSyllables(romaji) {
         'ra', 'ri', 'ru', 're', 'ro', 'wa', 'wi', 'we', 'wo',
         'ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo',
         'da', 'di', 'du', 'de', 'do', 'ba', 'bi', 'bu', 'be', 'bo',
-        'pa', 'pi', 'pu', 'pe', 'po', 'ju', 'ja', 'jo',
+        'pa', 'pi', 'pu', 'pe', 'po', 'ju', 'ja', 'jo', 'je',
         'fa', 'fi', 'fe', 'fo', 'va', 'vi', 'vu', 've', 'vo', 'ti', 'tu',
         'an', 'in', 'un', 'en', 'on'
     ];
@@ -58,12 +58,6 @@ function romajiToSyllables(romaji) {
 
         if (!matched && i < romaji.length - 1) {
             const twoChar = romaji.substring(i, i + 2);
-            if (twoChar === 'je') {
-                syllables.push('ji');
-                if (kanjiDatabase['e']) syllables.push('e');
-                i += 2;
-                matched = true;
-            }
             if (!matched && i < romaji.length - 2 && romaji.charAt(i + 2) === 'n') {
                 const threeCharWithN = twoChar + 'n';
                 if (threeLetterSyllables.includes(threeCharWithN) && kanjiDatabase[threeCharWithN]) {

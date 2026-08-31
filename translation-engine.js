@@ -44,7 +44,7 @@ class TransliterationEngine {
     /**
      * Phonetic transliteration using language-specific rules
      */
-    phoneticTransliteration(name, language) {
+    phoneticTransliteration(name, language, options = {}) {
         let phonetic = name;
         
         // Apply language-specific transformations
@@ -55,11 +55,11 @@ class TransliterationEngine {
             case 'hi': // Hindi/Indian
                 phonetic = this.applyIndianRules(phonetic);
                 break;
-            case 'la': // Latin/Spanish/Italian
-                phonetic = this.applyLatinRules(phonetic);
+            case 'la': // Latin / as-written vowels
+                phonetic = this.applyLatinRules(phonetic, options);
                 break;
             default: // English
-                phonetic = this.applyEnglishRules(phonetic);
+                phonetic = this.applyEnglishRules(phonetic, options);
         }
         
         // Final cleanup and conversion to katakana-compatible romaji
@@ -69,7 +69,7 @@ class TransliterationEngine {
     /**
      * English pronunciation rules
      */
-    applyEnglishRules(name) {
+    applyEnglishRules(name, options = {}) {
         const rules = [
             // Consonant digraphs and special combinations (MUST come first)
             { pattern: /th/g, replacement: 's' },           // Matthew → Mashu
@@ -101,6 +101,12 @@ class TransliterationEngine {
             { pattern: /ou/g, replacement: 'au' },          // Louis → Rui
             { pattern: /ow/g, replacement: 'au' },          // Howard → Hauado
             
+            // Soft g before e/i/y (Angelie → Anjelie). Skip doubled g (Maggie)
+            // and skip entirely when generating the hard-G katakana alternative.
+            ...(!options.hardG ? [
+                { pattern: /(?<!g)g([eiy])/g, replacement: 'j$1' }
+            ] : []),
+
             // English "-ke" endings: silent e, final /k/ → ku (not ke/ko)
             // Must run before the generic silent-e strip, otherwise "blake" → "blak" → "burako"
             { pattern: /arke$/g, replacement: 'aaku' },     // Clarke → Claaku
@@ -173,7 +179,7 @@ class TransliterationEngine {
     /**
      * Latin-based (Spanish/Italian/Portuguese) pronunciation rules
      */
-    applyLatinRules(name) {
+    applyLatinRules(name, options = {}) {
         const rules = [
             { pattern: /h$/g, replacement: '' },            // Sarah → Sara (silent trailing h)
             { pattern: /c([aou])/g, replacement: 'k$1' },   // Carlos → Karosu (hard c)
@@ -184,8 +190,11 @@ class TransliterationEngine {
             { pattern: /z/g, replacement: 's' },            // Gonzalez → Gonsaresu
             { pattern: /ci/g, replacement: 'chi' },         // Luciano → Ruchiano
             { pattern: /ce/g, replacement: 'che' },         // Vicente → Bichente
-            { pattern: /gi/g, replacement: 'ji' },          // Giovanni → Jobanni
-            { pattern: /ge/g, replacement: 'je' },          // Jorge → Horuhe
+            // Palatal g (Italian/Spanish). Skip when offering the as-written ゲ/ギ card.
+            ...(!options.hardG ? [
+                { pattern: /gi/g, replacement: 'ji' },      // Giovanni → Jobanni
+                { pattern: /ge/g, replacement: 'je' }       // Jorge → Horuhe
+            ] : []),
             { pattern: /qu/g, replacement: 'k' },           // Enrique → Enrike
         ];
         
@@ -290,25 +299,62 @@ class TransliterationEngine {
 
     /**
      * NFKC (halfwidth → fullwidth) then hiragana → katakana.
-     * Spaces and interpuncts are dropped so "チ・ジ・オ・ケ" still tokenizes.
+     * Does not strip separators; use stripKanaSeparators or
+     * groupKatakanaForKanji when grouping for kanji.
      */
-    normalizeToKatakana(text) {
+    toFullwidthKatakana(text) {
         return String(text)
             .normalize('NFKC')
-            .replace(/[\u3041-\u3096]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) + 0x60))
-            .replace(/[\s・･]/g, '');
+            .replace(/[\u3041-\u3096]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+    }
+
+    stripKanaSeparators(text) {
+        return this.toFullwidthKatakana(text).replace(/[\s・･／\/|,]+/g, '');
+    }
+
+    /**
+     * NFKC then hiragana → katakana. Spaces and interpuncts are dropped
+     * so a bare string still tokenizes (legacy callers).
+     */
+    normalizeToKatakana(text) {
+        return this.stripKanaSeparators(text);
+    }
+
+    /**
+     * Cut typed kana into kanji slots.
+     * Bare アンジェリー → an-je-ri (ン attaches, ー is length).
+     * ア・ン・ジェリー or spaces override the cut; ン stays its own slot.
+     */
+    groupKatakanaForKanji(text) {
+        const prepared = this.toFullwidthKatakana(text).trim();
+        const parts = prepared.split(/[\s・･／\/|,]+/).filter((p) => p.length > 0);
+
+        if (parts.length <= 1) {
+            return this.katakanaToSyllables(prepared);
+        }
+
+        const syllables = [];
+        const kana = [];
+        parts.forEach((part) => {
+            const parsed = this.katakanaToSyllables(part);
+            syllables.push(...parsed.syllables);
+            kana.push(...parsed.kana);
+        });
+        return { syllables, kana };
     }
 
     /**
      * Map typed kana directly to kanji-database keys.
-     * One mora → one syllable. Never runs English phonetic rules, never
-     * concatenates romaji and re-parses (that is what turned ケ into ko).
+     * One mora → one syllable, then attach ン onto the previous mora when
+     * the old parser would (アン → "an", not "a"+"n"). Never concatenates
+     * romaji and re-parses (that is what turned ケ into ko).
      *
-     * チジオケ → ["chi", "ji", "o", "ke"]
-     * ケン     → ["ke", "n"]   (ン is its own mora, not merged into ken)
-     * キャ     → ["kya"]
-     * ジェ     → ["je"]
-     * キー     → ["ki", "i"]   (ー copies the previous mora’s vowel)
+     * チジオケ     → ["chi", "ji", "o", "ke"]
+     * ケン         → ["ken"]
+     * アンジェリ   → ["an", "je", "ri"]
+     * アンジェリー → ["an", "je", "ri"]  (ー lengthens リ, no extra kanji slot)
+     * キー         → ["ki"]              (ー is length, not a second イ kanji)
+     * ジェ         → ["je"]
      */
     katakanaToSyllables(text) {
         const katakana = this.normalizeToKatakana(text);
@@ -326,12 +372,10 @@ class TransliterationEngine {
             }
 
             if (ch === 'ー') {
-                if (syllables.length > 0) {
-                    const vowel = this.vowelOfMora(syllables[syllables.length - 1]);
-                    if (vowel) {
-                        syllables.push(vowel);
-                        kana.push('ー');
-                    }
+                // Long vowel: lengthen the previous kana. It is not its own
+                // kanji slot (アンジェリー → ri, not ri + i).
+                if (kana.length > 0) {
+                    kana[kana.length - 1] += 'ー';
                 }
                 i++;
                 continue;
@@ -354,7 +398,58 @@ class TransliterationEngine {
             i++;
         }
 
-        return { syllables, kana };
+        return this.mergeNFinals({ syllables, kana });
+    }
+
+    /**
+     * Syllable keys that include a trailing ん/ン, matching the old
+     * romaji look-ahead. "rin" is omitted so "rini" stays ri-ni.
+     */
+    getNFinalKeys() {
+        return new Set([
+            'an', 'in', 'un', 'en', 'on',
+            'kan', 'kin', 'kun', 'ken', 'kon',
+            'san', 'sen', 'son',
+            'tan', 'ten', 'ton',
+            'nan', 'nun', 'nen', 'non',
+            'han', 'hin', 'hun', 'hen', 'hon',
+            'man', 'min', 'mun', 'men', 'mon',
+            'yan', 'yun', 'yon',
+            'ran', 'run', 'ren', 'ron',
+            'wan', 'won',
+            'gan', 'gin', 'gun', 'gen', 'gon',
+            'zan', 'zen', 'zon',
+            'dan', 'den', 'don',
+            'ban', 'bin', 'bun', 'ben', 'bon',
+            'pan', 'pin', 'pun', 'pen', 'pon'
+        ]);
+    }
+
+    mergeNFinals({ syllables, kana, katakana }) {
+        const keys = this.getNFinalKeys();
+        const mergedSyllables = [];
+        const mergedKana = kana ? [] : null;
+
+        for (let i = 0; i < syllables.length; i++) {
+            if (i < syllables.length - 1 && syllables[i + 1] === 'n') {
+                const combined = syllables[i] + 'n';
+                if (keys.has(combined)) {
+                    mergedSyllables.push(combined);
+                    if (mergedKana) {
+                        mergedKana.push((kana[i] || '') + (kana[i + 1] || ''));
+                    }
+                    i++;
+                    continue;
+                }
+            }
+            mergedSyllables.push(syllables[i]);
+            if (mergedKana) mergedKana.push(kana[i]);
+        }
+
+        const result = { syllables: mergedSyllables };
+        if (mergedKana) result.kana = mergedKana;
+        if (katakana !== undefined) result.katakana = katakana;
+        return result;
     }
 
     vowelOfMora(mora) {
@@ -421,8 +516,8 @@ class TransliterationEngine {
     }
 
     /**
-     * Turn a romaji string into katakana by longest-mora match.
-     * Does not merge n-finals (ken → ケン, not a single ケン-as-ken kanji key).
+     * Turn a romaji string into katakana by longest-mora match, then attach ン
+     * the same way katakanaToSyllables does (ken → ケン grouped as "ken").
      */
     romajiToKatakanaReading(romaji) {
         const moraToKana = this.getMoraToKatakanaMap();
@@ -449,41 +544,71 @@ class TransliterationEngine {
             if (!matched) i++;
         }
 
-        return {
+        return this.mergeNFinals({
             katakana: kana.join(''),
             syllables,
             kana
-        };
+        });
     }
 
     /**
      * Katakana spellings for a roman name that is not in the dictionary.
-     * Always includes the phonetic engine’s reading, then ク/ケ ending
-     * variants when the English name makes that ambiguous.
+     * Suggested reading follows the vowel-system toggle (English → soft G,
+     * as-written/Latin → hard G). Also offers ジェ/ゲ and ク/ケ when the
+     * spelling is ambiguous. Never guesses a source language.
      */
     generateKatakanaOptions(name, language = 'en') {
         const lower = name.toLowerCase().trim();
         const options = [];
         const seen = new Set();
 
-        const add = (romaji, label, recommended) => {
-            const reading = this.romajiToKatakanaReading(romaji);
-            if (!reading.katakana || seen.has(reading.katakana)) return;
-            seen.add(reading.katakana);
+        const add = (romaji, label, recommended, katakanaOverride) => {
+            const parsed = katakanaOverride
+                ? this.katakanaToSyllables(katakanaOverride)
+                : this.romajiToKatakanaReading(romaji);
+            const katakana = katakanaOverride
+                ? this.normalizeToKatakana(katakanaOverride)
+                : parsed.katakana;
+            if (!katakana || seen.has(katakana)) return;
+            seen.add(katakana);
             options.push({
-                katakana: reading.katakana,
-                syllables: reading.syllables,
-                kana: reading.kana,
-                romaji,
+                katakana,
+                syllables: parsed.syllables,
+                kana: parsed.kana,
+                romaji: parsed.syllables.join(''),
                 label,
                 recommended: !!recommended
             });
         };
 
-        const primary = this.phoneticTransliteration(lower, language);
-        add(primary, 'Suggested', true);
+        const preferSoftG = language !== 'la';
+        const hasGSpot = /(?<!g)g[eiy]/i.test(lower);
+        // English -lie/-rie/-nie/-mie is usually リー (Angelie → アンジェリー).
+        const longIe = language === 'en' && /[lrmn]ie$/i.test(lower);
+        const soft = this.phoneticTransliteration(lower, language, { hardG: false });
+        const hard = this.phoneticTransliteration(lower, language, { hardG: true });
+        const preferred = preferSoftG ? soft : hard;
+        const otherG = preferSoftG ? hard : soft;
+        const preferredKana = this.romajiToKatakanaReading(preferred).katakana;
+        const otherKana = this.romajiToKatakanaReading(otherG).katakana;
 
-        const primaryReading = this.romajiToKatakanaReading(primary);
+        if (longIe && preferredKana) {
+            add(preferred, 'Suggested', true, preferredKana + 'ー');
+            add(preferred, 'Short i (no ー)', false);
+        } else {
+            add(preferred, 'Suggested', true);
+        }
+
+        if (hasGSpot) {
+            const gLabel = preferSoftG ? 'Hard G (ゲ/ギ)' : 'Soft G (ジェ/ジ)';
+            if (longIe && otherKana) {
+                add(otherG, gLabel, false, otherKana + 'ー');
+            } else {
+                add(otherG, gLabel, false);
+            }
+        }
+
+        const primaryReading = this.romajiToKatakanaReading(preferred);
         const mora = primaryReading.syllables;
         if (mora.length > 0) {
             const last = mora[mora.length - 1];
