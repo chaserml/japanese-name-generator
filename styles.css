@@ -250,6 +250,76 @@ input[type="text"]:focus {
     font-style: italic;
 }
 
+/* Katakana picker (stage 1 for unknown roman names) */
+.katakana-section {
+    background: var(--card-background);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-bottom: 30px;
+}
+
+.katakana-section h2 {
+    color: var(--sakura-dark);
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+.katakana-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.katakana-card {
+    background: white;
+    border: 2px solid var(--sakura-light);
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    width: 100%;
+}
+
+.katakana-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px var(--hover-shadow);
+    border-color: var(--sakura-pink);
+}
+
+.katakana-card.selected {
+    background: linear-gradient(135deg, var(--sakura-light) 0%, var(--sakura-pink) 100%);
+    border-color: var(--sakura-dark);
+    box-shadow: 0 4px 15px var(--hover-shadow);
+}
+
+.katakana-spelling {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+}
+
+.katakana-card.selected .katakana-spelling {
+    color: var(--sakura-dark);
+}
+
+.katakana-romaji {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.katakana-label {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sakura-dark);
+}
+
 #syllablesContainer {
     display: flex;
     flex-direction: column;
@@ -447,7 +517,7 @@ footer {
         padding: 25px;
     }
 
-    .input-section, .syllables-section, .result-section {
+    .input-section, .syllables-section, .result-section, .katakana-section {
         padding: 20px;
     }
 }

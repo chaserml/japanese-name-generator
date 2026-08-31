@@ -34,6 +34,13 @@ class TransliterationEngine {
         return this.phoneticTransliteration(lowerName, language);
     }
 
+    hasCuratedTranslation(name, language = 'en') {
+        const key = name.toLowerCase().trim();
+        if (this.customTranslations[key]) return true;
+        if (language !== 'la' && this.nameDict[key]) return true;
+        return false;
+    }
+
     /**
      * Phonetic transliteration using language-specific rules
      */
@@ -94,8 +101,18 @@ class TransliterationEngine {
             { pattern: /ou/g, replacement: 'au' },          // Louis → Rui
             { pattern: /ow/g, replacement: 'au' },          // Howard → Hauado
             
-            // Silent e at end
-            { pattern: /([^aeiou])e$/g, replacement: '$1' }, // Kate → Kat
+            // English "-ke" endings: silent e, final /k/ → ku (not ke/ko)
+            // Must run before the generic silent-e strip, otherwise "blake" → "blak" → "burako"
+            { pattern: /arke$/g, replacement: 'aaku' },     // Clarke → Claaku
+            { pattern: /urke$/g, replacement: 'aaku' },     // Burke → Baaku
+            { pattern: /erke$/g, replacement: 'aaku' },     // Berkeley stem
+            { pattern: /ake$/g, replacement: 'eku' },       // Blake → Bureku
+            { pattern: /ike$/g, replacement: 'aiku' },      // Mike → Maiku, Ike → Aiku
+            { pattern: /eke$/g, replacement: 'iiku' },      // Zeke → Ziiku
+            { pattern: /uke$/g, replacement: 'uku' },       // Luke → Luku, Duke → Duku
+            
+            // Silent e at end (but not after k — keeps Chijioke → ke, not ko)
+            { pattern: /([^aeiouk])e$/g, replacement: '$1' }, // Kate → Kat
             
             // Common endings
             { pattern: /ce$/g, replacement: 'su' },         // Grace → Gureisu
@@ -247,8 +264,9 @@ class TransliterationEngine {
                         continue;
                     }
                     
-                    // Add 'u' for most consonants, 'o' for some
-                    if (['t', 'd', 'k', 'g'].includes(char)) {
+                    // Final /t/ and /d/ take 'o' (ト/ド). Final /k/ and /g/
+                    // take 'u' (ク/グ) — "Mark" → maruku, not maruko.
+                    if (['t', 'd'].includes(char)) {
                         result += 'o';
                     } else {
                         result += 'u';
@@ -258,6 +276,231 @@ class TransliterationEngine {
         }
         
         return result;
+    }
+
+    /**
+     * True when the input is (or contains) Japanese kana.
+     * Katakana/hiragana is the source of truth for mora → kanji.
+     */
+    isKanaInput(text) {
+        if (!text) return false;
+        const normalized = this.normalizeToKatakana(text);
+        return /[\u30A1-\u30FAー]/.test(normalized);
+    }
+
+    /**
+     * NFKC (halfwidth → fullwidth) then hiragana → katakana.
+     * Spaces and interpuncts are dropped so "チ・ジ・オ・ケ" still tokenizes.
+     */
+    normalizeToKatakana(text) {
+        return String(text)
+            .normalize('NFKC')
+            .replace(/[\u3041-\u3096]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) + 0x60))
+            .replace(/[\s・･]/g, '');
+    }
+
+    /**
+     * Map typed kana directly to kanji-database keys.
+     * One mora → one syllable. Never runs English phonetic rules, never
+     * concatenates romaji and re-parses (that is what turned ケ into ko).
+     *
+     * チジオケ → ["chi", "ji", "o", "ke"]
+     * ケン     → ["ke", "n"]   (ン is its own mora, not merged into ken)
+     * キャ     → ["kya"]
+     * ジェ     → ["je"]
+     * キー     → ["ki", "i"]   (ー copies the previous mora’s vowel)
+     */
+    katakanaToSyllables(text) {
+        const katakana = this.normalizeToKatakana(text);
+        const moraMap = this.getKatakanaMoraMap();
+        const syllables = [];
+        const kana = [];
+        let i = 0;
+
+        while (i < katakana.length) {
+            const ch = katakana.charAt(i);
+
+            if (ch === 'ッ' || ch === 'っ') {
+                i++;
+                continue;
+            }
+
+            if (ch === 'ー') {
+                if (syllables.length > 0) {
+                    const vowel = this.vowelOfMora(syllables[syllables.length - 1]);
+                    if (vowel) {
+                        syllables.push(vowel);
+                        kana.push('ー');
+                    }
+                }
+                i++;
+                continue;
+            }
+
+            if (i < katakana.length - 1) {
+                const twoChar = katakana.substring(i, i + 2);
+                if (moraMap[twoChar]) {
+                    syllables.push(moraMap[twoChar]);
+                    kana.push(twoChar);
+                    i += 2;
+                    continue;
+                }
+            }
+
+            if (moraMap[ch]) {
+                syllables.push(moraMap[ch]);
+                kana.push(ch);
+            }
+            i++;
+        }
+
+        return { syllables, kana };
+    }
+
+    vowelOfMora(mora) {
+        if (!mora || mora === 'n') return null;
+        const match = mora.match(/[aeiou]$/);
+        return match ? match[0] : null;
+    }
+
+    getKatakanaMoraMap() {
+        return {
+            'ア': 'a', 'イ': 'i', 'ウ': 'u', 'エ': 'e', 'オ': 'o',
+            'ァ': 'a', 'ィ': 'i', 'ゥ': 'u', 'ェ': 'e', 'ォ': 'o',
+            'カ': 'ka', 'キ': 'ki', 'ク': 'ku', 'ケ': 'ke', 'コ': 'ko',
+            'ヵ': 'ka', 'ヶ': 'ke',
+            'サ': 'sa', 'シ': 'shi', 'ス': 'su', 'セ': 'se', 'ソ': 'so',
+            'タ': 'ta', 'チ': 'chi', 'ツ': 'tsu', 'テ': 'te', 'ト': 'to',
+            'ナ': 'na', 'ニ': 'ni', 'ヌ': 'nu', 'ネ': 'ne', 'ノ': 'no',
+            'ハ': 'ha', 'ヒ': 'hi', 'フ': 'fu', 'ヘ': 'he', 'ホ': 'ho',
+            'マ': 'ma', 'ミ': 'mi', 'ム': 'mu', 'メ': 'me', 'モ': 'mo',
+            'ヤ': 'ya', 'ユ': 'yu', 'ヨ': 'yo',
+            'ャ': 'ya', 'ュ': 'yu', 'ョ': 'yo',
+            'ラ': 'ra', 'リ': 'ri', 'ル': 'ru', 'レ': 're', 'ロ': 'ro',
+            'ワ': 'wa', 'ヰ': 'wi', 'ヱ': 'we', 'ヲ': 'wo', 'ン': 'n', 'ヮ': 'wa',
+            'ガ': 'ga', 'ギ': 'gi', 'グ': 'gu', 'ゲ': 'ge', 'ゴ': 'go',
+            'ザ': 'za', 'ジ': 'ji', 'ズ': 'zu', 'ゼ': 'ze', 'ゾ': 'zo',
+            'ダ': 'da', 'ヂ': 'ji', 'ヅ': 'zu', 'デ': 'de', 'ド': 'do',
+            'バ': 'ba', 'ビ': 'bi', 'ブ': 'bu', 'ベ': 'be', 'ボ': 'bo',
+            'パ': 'pa', 'ピ': 'pi', 'プ': 'pu', 'ペ': 'pe', 'ポ': 'po',
+            'キャ': 'kya', 'キュ': 'kyu', 'キョ': 'kyo',
+            'シャ': 'sha', 'シュ': 'shu', 'ショ': 'sho',
+            'チャ': 'cha', 'チュ': 'chu', 'チョ': 'cho',
+            'ニャ': 'nya', 'ニュ': 'nyu', 'ニョ': 'nyo',
+            'ヒャ': 'hya', 'ヒュ': 'hyu', 'ヒョ': 'hyo',
+            'ミャ': 'mya', 'ミュ': 'myu', 'ミョ': 'myo',
+            'リャ': 'rya', 'リュ': 'ryu', 'リョ': 'ryo',
+            'ギャ': 'gya', 'ギュ': 'gyu', 'ギョ': 'gyo',
+            'ジャ': 'ja', 'ジュ': 'ju', 'ジョ': 'jo',
+            'ビャ': 'bya', 'ビュ': 'byu', 'ビョ': 'byo',
+            'ピャ': 'pya', 'ピュ': 'pyu', 'ピョ': 'pyo',
+            'ファ': 'fa', 'フィ': 'fi', 'フェ': 'fe', 'フォ': 'fo',
+            'ウィ': 'wi', 'ウェ': 'we', 'ウォ': 'wo',
+            'ヴァ': 'va', 'ヴィ': 'vi', 'ヴ': 'vu', 'ヴェ': 've', 'ヴォ': 'vo',
+            'ティ': 'ti', 'トゥ': 'tu', 'ディ': 'di', 'ドゥ': 'du',
+            'シェ': 'she', 'ジェ': 'je', 'チェ': 'che'
+        };
+    }
+
+    /**
+     * Inverse of getKatakanaMoraMap. First kana for a mora wins
+     * (ジ over ヂ, ズ over ヅ).
+     */
+    getMoraToKatakanaMap() {
+        const kanaToMora = this.getKatakanaMoraMap();
+        const moraToKana = {};
+        Object.entries(kanaToMora).forEach(([kana, mora]) => {
+            if (!moraToKana[mora]) moraToKana[mora] = kana;
+        });
+        moraToKana.si = moraToKana.shi;
+        moraToKana.ti = moraToKana.ti || 'ティ';
+        moraToKana.tu = moraToKana.tu || 'トゥ';
+        moraToKana.hu = moraToKana.fu;
+        moraToKana.zi = moraToKana.ji;
+        return moraToKana;
+    }
+
+    /**
+     * Turn a romaji string into katakana by longest-mora match.
+     * Does not merge n-finals (ken → ケン, not a single ケン-as-ken kanji key).
+     */
+    romajiToKatakanaReading(romaji) {
+        const moraToKana = this.getMoraToKatakanaMap();
+        const keys = Object.keys(moraToKana).sort((a, b) => b.length - a.length);
+        const text = String(romaji || '').toLowerCase().trim();
+        const syllables = [];
+        const kana = [];
+        let i = 0;
+
+        while (i < text.length) {
+            let matched = false;
+            for (let k = 0; k < keys.length; k++) {
+                const key = keys[k];
+                if (text.substr(i, key.length) === key) {
+                    const kanaChar = moraToKana[key];
+                    const mora = this.getKatakanaMoraMap()[kanaChar] || key;
+                    syllables.push(mora);
+                    kana.push(kanaChar);
+                    i += key.length;
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) i++;
+        }
+
+        return {
+            katakana: kana.join(''),
+            syllables,
+            kana
+        };
+    }
+
+    /**
+     * Katakana spellings for a roman name that is not in the dictionary.
+     * Always includes the phonetic engine’s reading, then ク/ケ ending
+     * variants when the English name makes that ambiguous.
+     */
+    generateKatakanaOptions(name, language = 'en') {
+        const lower = name.toLowerCase().trim();
+        const options = [];
+        const seen = new Set();
+
+        const add = (romaji, label, recommended) => {
+            const reading = this.romajiToKatakanaReading(romaji);
+            if (!reading.katakana || seen.has(reading.katakana)) return;
+            seen.add(reading.katakana);
+            options.push({
+                katakana: reading.katakana,
+                syllables: reading.syllables,
+                kana: reading.kana,
+                romaji,
+                label,
+                recommended: !!recommended
+            });
+        };
+
+        const primary = this.phoneticTransliteration(lower, language);
+        add(primary, 'Suggested', true);
+
+        const primaryReading = this.romajiToKatakanaReading(primary);
+        const mora = primaryReading.syllables;
+        if (mora.length > 0) {
+            const last = mora[mora.length - 1];
+            const stem = mora.slice(0, -1).join('');
+            const kLikeEnding = /([kg]|ke|que)$/i.test(lower);
+
+            if (kLikeEnding && (last === 'ku' || last === 'ke' || last === 'ko')) {
+                if (last !== 'ku') add(stem + 'ku', 'ク ending (silent e)', false);
+                if (last !== 'ke') add(stem + 'ke', 'ケ ending (pronounced)', false);
+            }
+
+            if (/ake$/i.test(lower) && last === 'ku' && mora[mora.length - 2] !== 'i') {
+                add(stem + 'iku', 'エイク (long a)', false);
+            }
+        }
+
+        return options;
     }
 
     /**
@@ -292,6 +535,8 @@ class TransliterationEngine {
             "emily": "emiri",
             "michael": "maikeru",
             "mike": "maiku",
+            "blake": "bureku",
+            "blayke": "bureku",
             "david": "deibido",
             "james": "jeimusu",
             "john": "jon",
@@ -631,6 +876,13 @@ class TransliterationEngine {
             "lance": "ransu",
             "levi": "rebi",
             "luke": "ruku",
+            "duke": "duuku",
+            "ike": "aiku",
+            "zeke": "jiiku",
+            "lake": "reiku",
+            "burke": "baaku",
+            "clarke": "kuraaku",
+            "spike": "supaiku",
             "max": "makusu",
             "cole": "koru",
             "derek": "dereku",
