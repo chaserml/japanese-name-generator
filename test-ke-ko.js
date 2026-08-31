@@ -11,7 +11,7 @@ global.localStorage = {
 };
 
 const TransliterationEngine = require('./translation-engine.js');
-const { romajiToSyllables, katakanaToRomaji } = require('./test-syllables-node.js');
+const { romajiToSyllables } = require('./test-syllables-node.js');
 const engine = new TransliterationEngine();
 
 function assert(condition, message) {
@@ -25,9 +25,11 @@ function endsWithKo(romaji) {
 }
 
 function lastSyllable(input, mode = 'english') {
-    const romaji = mode === 'katakana'
-        ? katakanaToRomaji(input)
-        : engine.translateName(input, 'en');
+    if (mode === 'katakana') {
+        const parsed = engine.katakanaToSyllables(input);
+        return { romaji: parsed.syllables.join(''), syllables: parsed.syllables, last: parsed.syllables[parsed.syllables.length - 1] };
+    }
+    const romaji = engine.translateName(input, 'en');
     const syllables = romajiToSyllables(romaji);
     return { romaji, syllables, last: syllables[syllables.length - 1] };
 }
@@ -84,7 +86,7 @@ cases.forEach((testCase) => {
     const language = testCase.language || 'en';
     const mode = testCase.mode || 'english';
     const romaji = mode === 'katakana'
-        ? katakanaToRomaji(testCase.name)
+        ? engine.katakanaToSyllables(testCase.name).syllables.join('')
         : engine.translateName(testCase.name, language);
     const phonetic = engine.phoneticTransliteration(testCase.name.toLowerCase(), language);
     const parsed = lastSyllable(testCase.name, mode);

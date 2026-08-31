@@ -7,6 +7,7 @@ class JapaneseNameGenerator {
         this.transliterator = new TransliterationEngine();
         this.selectedKanji = [];
         this.currentSyllables = [];
+        this.currentKanaSource = null;
         this.currentName = '';
         this.favorites = this.loadFavorites();
         this.RECOMMENDED_COUNT = 3;
@@ -57,69 +58,6 @@ class JapaneseNameGenerator {
         
         // Clear input
         nameInput.value = '';
-    }
-
-    // Convert katakana to romaji
-    katakanaToRomaji(katakana) {
-        const katakanaMap = {
-            'ア': 'a', 'イ': 'i', 'ウ': 'u', 'エ': 'e', 'オ': 'o',
-            'カ': 'ka', 'キ': 'ki', 'ク': 'ku', 'ケ': 'ke', 'コ': 'ko',
-            'サ': 'sa', 'シ': 'shi', 'ス': 'su', 'セ': 'se', 'ソ': 'so',
-            'タ': 'ta', 'チ': 'chi', 'ツ': 'tsu', 'テ': 'te', 'ト': 'to',
-            'ナ': 'na', 'ニ': 'ni', 'ヌ': 'nu', 'ネ': 'ne', 'ノ': 'no',
-            'ハ': 'ha', 'ヒ': 'hi', 'フ': 'fu', 'ヘ': 'he', 'ホ': 'ho',
-            'マ': 'ma', 'ミ': 'mi', 'ム': 'mu', 'メ': 'me', 'モ': 'mo',
-            'ヤ': 'ya', 'ユ': 'yu', 'ヨ': 'yo',
-            'ラ': 'ra', 'リ': 'ri', 'ル': 'ru', 'レ': 're', 'ロ': 'ro',
-            'ワ': 'wa', 'ヲ': 'wo', 'ン': 'n',
-            'ガ': 'ga', 'ギ': 'gi', 'グ': 'gu', 'ゲ': 'ge', 'ゴ': 'go',
-            'ザ': 'za', 'ジ': 'ji', 'ズ': 'zu', 'ゼ': 'ze', 'ゾ': 'zo',
-            'ダ': 'da', 'ヂ': 'ji', 'ヅ': 'zu', 'デ': 'de', 'ド': 'do',
-            'バ': 'ba', 'ビ': 'bi', 'ブ': 'bu', 'ベ': 'be', 'ボ': 'bo',
-            'パ': 'pa', 'ピ': 'pi', 'プ': 'pu', 'ペ': 'pe', 'ポ': 'po',
-            'キャ': 'kya', 'キュ': 'kyu', 'キョ': 'kyo',
-            'シャ': 'sha', 'シュ': 'shu', 'ショ': 'sho',
-            'チャ': 'cha', 'チュ': 'chu', 'チョ': 'cho',
-            'ニャ': 'nya', 'ニュ': 'nyu', 'ニョ': 'nyo',
-            'ヒャ': 'hya', 'ヒュ': 'hyu', 'ヒョ': 'hyo',
-            'ミャ': 'mya', 'ミュ': 'myu', 'ミョ': 'myo',
-            'リャ': 'rya', 'リュ': 'ryu', 'リョ': 'ryo',
-            'ギャ': 'gya', 'ギュ': 'gyu', 'ギョ': 'gyo',
-            'ジャ': 'ja', 'ジュ': 'ju', 'ジョ': 'jo',
-            'ビャ': 'bya', 'ビュ': 'byu', 'ビョ': 'byo',
-            'ピャ': 'pya', 'ピュ': 'pyu', 'ピョ': 'pyo',
-            'ファ': 'fa', 'フィ': 'fi', 'フェ': 'fe', 'フォ': 'fo',
-            'ウィ': 'wi', 'ウェ': 'we', 'ウォ': 'wo',
-            'ヴァ': 'va', 'ヴィ': 'vi', 'ヴ': 'vu', 'ヴェ': 've', 'ヴォ': 'vo',
-            'ティ': 'ti', 'トゥ': 'tu', 'ディ': 'di', 'ドゥ': 'du',
-            'シェ': 'she', 'ジェ': 'je', 'チェ': 'che',
-            // Add small tsu for double consonants
-            'ッ': ''
-        };
-        
-        let romaji = '';
-        let i = 0;
-        
-        while (i < katakana.length) {
-            // Try 2-character combinations first
-            if (i < katakana.length - 1) {
-                const twoChar = katakana.substring(i, i + 2);
-                if (katakanaMap[twoChar]) {
-                    romaji += katakanaMap[twoChar];
-                    i += 2;
-                    continue;
-                }
-            }
-            
-            // Try single character
-            const oneChar = katakana.charAt(i);
-            if (katakanaMap[oneChar]) {
-                romaji += katakanaMap[oneChar];
-            }
-            i++;
-        }
-        
-        return romaji;
     }
 
     // Load favorites from localStorage
@@ -352,19 +290,15 @@ class JapaneseNameGenerator {
         }
 
         this.currentName = nameInput;
+        this.currentKanaSource = null;
 
-        // Auto-detect katakana input even if English mode is selected
-        const hasKatakana = /[\u30A0-\u30FF]/.test(nameInput);
-        const inputMode = hasKatakana
-            ? 'katakana'
-            : document.querySelector('input[name="inputMode"]:checked').value;
-        
-        if (inputMode === 'katakana') {
-            // Convert katakana directly to romaji syllables
-            const romaji = this.katakanaToRomaji(nameInput);
-            this.currentSyllables = this.romajiToSyllables(romaji);
+        // Katakana/hiragana is the source of truth: one mora → one kanji slot.
+        // Never run English phonetic rules or re-parse a flattened romaji string.
+        if (this.transliterator.isKanaInput(nameInput)) {
+            const parsed = this.transliterator.katakanaToSyllables(nameInput);
+            this.currentSyllables = parsed.syllables;
+            this.currentKanaSource = parsed.kana;
         } else {
-            // Get language hint if available
             const langSelector = document.getElementById('languageHint');
             const languageHint = langSelector ? langSelector.value : 'en';
             this.currentSyllables = this.nameToSyllables(nameInput, languageHint);
@@ -398,7 +332,11 @@ class JapaneseNameGenerator {
 
             const header = document.createElement('div');
             header.className = 'syllable-header';
-            header.textContent = `"${syllable.toUpperCase()}" syllable`;
+            if (this.currentKanaSource && this.currentKanaSource[syllableIndex]) {
+                header.textContent = `${this.currentKanaSource[syllableIndex]}  (${syllable})`;
+            } else {
+                header.textContent = `"${syllable.toUpperCase()}" syllable`;
+            }
             syllableGroup.appendChild(header);
 
             // Get all kanji for this syllable
@@ -618,6 +556,7 @@ class JapaneseNameGenerator {
         document.getElementById('resultSection').classList.add('hidden');
         this.selectedKanji = [];
         this.currentSyllables = [];
+        this.currentKanaSource = null;
         this.currentName = '';
         
         // Clear any error messages

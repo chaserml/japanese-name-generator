@@ -272,6 +272,130 @@ class TransliterationEngine {
     }
 
     /**
+     * True when the input is (or contains) Japanese kana.
+     * Katakana/hiragana is the source of truth for mora → kanji.
+     */
+    isKanaInput(text) {
+        if (!text) return false;
+        const normalized = this.normalizeToKatakana(text);
+        return /[\u30A1-\u30FAー]/.test(normalized);
+    }
+
+    /**
+     * NFKC (halfwidth → fullwidth) then hiragana → katakana.
+     * Spaces and interpuncts are dropped so "チ・ジ・オ・ケ" still tokenizes.
+     */
+    normalizeToKatakana(text) {
+        return String(text)
+            .normalize('NFKC')
+            .replace(/[\u3041-\u3096]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) + 0x60))
+            .replace(/[\s・･]/g, '');
+    }
+
+    /**
+     * Map typed kana directly to kanji-database keys.
+     * One mora → one syllable. Never runs English phonetic rules, never
+     * concatenates romaji and re-parses (that is what turned ケ into ko).
+     *
+     * チジオケ → ["chi", "ji", "o", "ke"]
+     * ケン     → ["ke", "n"]   (ン is its own mora, not merged into ken)
+     * キャ     → ["kya"]
+     * ジェ     → ["je"]
+     * キー     → ["ki", "i"]   (ー copies the previous mora’s vowel)
+     */
+    katakanaToSyllables(text) {
+        const katakana = this.normalizeToKatakana(text);
+        const moraMap = this.getKatakanaMoraMap();
+        const syllables = [];
+        const kana = [];
+        let i = 0;
+
+        while (i < katakana.length) {
+            const ch = katakana.charAt(i);
+
+            if (ch === 'ッ' || ch === 'っ') {
+                i++;
+                continue;
+            }
+
+            if (ch === 'ー') {
+                if (syllables.length > 0) {
+                    const vowel = this.vowelOfMora(syllables[syllables.length - 1]);
+                    if (vowel) {
+                        syllables.push(vowel);
+                        kana.push('ー');
+                    }
+                }
+                i++;
+                continue;
+            }
+
+            if (i < katakana.length - 1) {
+                const twoChar = katakana.substring(i, i + 2);
+                if (moraMap[twoChar]) {
+                    syllables.push(moraMap[twoChar]);
+                    kana.push(twoChar);
+                    i += 2;
+                    continue;
+                }
+            }
+
+            if (moraMap[ch]) {
+                syllables.push(moraMap[ch]);
+                kana.push(ch);
+            }
+            i++;
+        }
+
+        return { syllables, kana };
+    }
+
+    vowelOfMora(mora) {
+        if (!mora || mora === 'n') return null;
+        const match = mora.match(/[aeiou]$/);
+        return match ? match[0] : null;
+    }
+
+    getKatakanaMoraMap() {
+        return {
+            'ア': 'a', 'イ': 'i', 'ウ': 'u', 'エ': 'e', 'オ': 'o',
+            'ァ': 'a', 'ィ': 'i', 'ゥ': 'u', 'ェ': 'e', 'ォ': 'o',
+            'カ': 'ka', 'キ': 'ki', 'ク': 'ku', 'ケ': 'ke', 'コ': 'ko',
+            'ヵ': 'ka', 'ヶ': 'ke',
+            'サ': 'sa', 'シ': 'shi', 'ス': 'su', 'セ': 'se', 'ソ': 'so',
+            'タ': 'ta', 'チ': 'chi', 'ツ': 'tsu', 'テ': 'te', 'ト': 'to',
+            'ナ': 'na', 'ニ': 'ni', 'ヌ': 'nu', 'ネ': 'ne', 'ノ': 'no',
+            'ハ': 'ha', 'ヒ': 'hi', 'フ': 'fu', 'ヘ': 'he', 'ホ': 'ho',
+            'マ': 'ma', 'ミ': 'mi', 'ム': 'mu', 'メ': 'me', 'モ': 'mo',
+            'ヤ': 'ya', 'ユ': 'yu', 'ヨ': 'yo',
+            'ャ': 'ya', 'ュ': 'yu', 'ョ': 'yo',
+            'ラ': 'ra', 'リ': 'ri', 'ル': 'ru', 'レ': 're', 'ロ': 'ro',
+            'ワ': 'wa', 'ヰ': 'wi', 'ヱ': 'we', 'ヲ': 'wo', 'ン': 'n', 'ヮ': 'wa',
+            'ガ': 'ga', 'ギ': 'gi', 'グ': 'gu', 'ゲ': 'ge', 'ゴ': 'go',
+            'ザ': 'za', 'ジ': 'ji', 'ズ': 'zu', 'ゼ': 'ze', 'ゾ': 'zo',
+            'ダ': 'da', 'ヂ': 'ji', 'ヅ': 'zu', 'デ': 'de', 'ド': 'do',
+            'バ': 'ba', 'ビ': 'bi', 'ブ': 'bu', 'ベ': 'be', 'ボ': 'bo',
+            'パ': 'pa', 'ピ': 'pi', 'プ': 'pu', 'ペ': 'pe', 'ポ': 'po',
+            'キャ': 'kya', 'キュ': 'kyu', 'キョ': 'kyo',
+            'シャ': 'sha', 'シュ': 'shu', 'ショ': 'sho',
+            'チャ': 'cha', 'チュ': 'chu', 'チョ': 'cho',
+            'ニャ': 'nya', 'ニュ': 'nyu', 'ニョ': 'nyo',
+            'ヒャ': 'hya', 'ヒュ': 'hyu', 'ヒョ': 'hyo',
+            'ミャ': 'mya', 'ミュ': 'myu', 'ミョ': 'myo',
+            'リャ': 'rya', 'リュ': 'ryu', 'リョ': 'ryo',
+            'ギャ': 'gya', 'ギュ': 'gyu', 'ギョ': 'gyo',
+            'ジャ': 'ja', 'ジュ': 'ju', 'ジョ': 'jo',
+            'ビャ': 'bya', 'ビュ': 'byu', 'ビョ': 'byo',
+            'ピャ': 'pya', 'ピュ': 'pyu', 'ピョ': 'pyo',
+            'ファ': 'fa', 'フィ': 'fi', 'フェ': 'fe', 'フォ': 'fo',
+            'ウィ': 'wi', 'ウェ': 'we', 'ウォ': 'wo',
+            'ヴァ': 'va', 'ヴィ': 'vi', 'ヴ': 'vu', 'ヴェ': 've', 'ヴォ': 'vo',
+            'ティ': 'ti', 'トゥ': 'tu', 'ディ': 'di', 'ドゥ': 'du',
+            'シェ': 'she', 'ジェ': 'je', 'チェ': 'che'
+        };
+    }
+
+    /**
      * Save a custom translation for future use
      */
     saveCustomTranslation(foreignName, romajiTranslation) {
