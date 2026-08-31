@@ -24,12 +24,12 @@ function endsWithKo(romaji) {
     return /ko$/.test(romaji);
 }
 
-function lastSyllable(input, mode = 'english') {
+function lastSyllable(input, mode = 'english', language = 'en') {
     if (mode === 'katakana') {
         const parsed = engine.katakanaToSyllables(input);
         return { romaji: parsed.syllables.join(''), syllables: parsed.syllables, last: parsed.syllables[parsed.syllables.length - 1] };
     }
-    const romaji = engine.translateName(input, 'en');
+    const romaji = engine.translateName(input, language);
     const syllables = romajiToSyllables(romaji);
     return { romaji, syllables, last: syllables[syllables.length - 1] };
 }
@@ -63,8 +63,9 @@ const cases = [
     { name: 'Kirk', expectedPhonetic: true, mustEnd: 'ku', mustNotEnd: 'ko' },
     { name: 'York', expectedPhonetic: true, mustEnd: 'ku', mustNotEnd: 'ko' },
 
-    // Pronounced -ke syllable in English (not silent): stays ke
+    // Pronounced -ke syllable (not English silent e): stays ke
     { name: 'Chijioke', expectedPhonetic: true, lastSyllable: 'ke', mustNotEnd: 'ko' },
+    { name: 'Chijioke', language: 'la', expectedPhonetic: true, lastSyllable: 'ke', mustNotEnd: 'ko' },
 
     // Katakana input: ケ must stay ke, not ko
     { name: 'チジオケ', mode: 'katakana', lastSyllable: 'ke', mustNotEnd: 'ko' },
@@ -89,7 +90,7 @@ cases.forEach((testCase) => {
         ? engine.katakanaToSyllables(testCase.name).syllables.join('')
         : engine.translateName(testCase.name, language);
     const phonetic = engine.phoneticTransliteration(testCase.name.toLowerCase(), language);
-    const parsed = lastSyllable(testCase.name, mode);
+    const parsed = lastSyllable(testCase.name, mode, language);
 
     try {
         if (testCase.expected) {

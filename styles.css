@@ -320,6 +320,39 @@ input[type="text"]:focus {
     color: var(--sakura-dark);
 }
 
+.katakana-manual {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--sakura-light);
+}
+
+.katakana-manual label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.katakana-manual-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.katakana-manual-row input {
+    flex: 1;
+    min-width: 180px;
+    padding: 12px 14px;
+    border: 2px solid var(--sakura-light);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.katakana-manual-row .primary-btn {
+    width: auto;
+    margin-top: 0;
+}
+
 #syllablesContainer {
     display: flex;
     flex-direction: column;
