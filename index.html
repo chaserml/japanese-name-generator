@@ -56,8 +56,14 @@
                         </select>
                     </div>
 
-                    <button id="convertBtn" class="primary-btn">Convert to Kanji</button>
+                    <button id="convertBtn" class="primary-btn">Convert</button>
                 </div>
+            </section>
+
+            <section id="katakanaSection" class="katakana-section hidden">
+                <h2>Choose a katakana spelling</h2>
+                <p class="hint">This name is not in the dictionary. Pick the katakana that sounds right, then choose kanji for each mora.</p>
+                <div id="katakanaOptions" class="katakana-options"></div>
             </section>
 
             <section id="syllablesSection" class="syllables-section hidden">
@@ -83,8 +89,8 @@
     </div>
 
     <!-- Load scripts in correct order -->
-    <script src="kanji-database.js?v=12"></script>
-    <script src="translation-engine.js?v=12"></script>
-    <script src="script.js?v=12"></script>
+    <script src="kanji-database.js?v=13"></script>
+    <script src="translation-engine.js?v=13"></script>
+    <script src="script.js?v=13"></script>
 </body>
 </html>

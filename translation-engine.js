@@ -34,6 +34,13 @@ class TransliterationEngine {
         return this.phoneticTransliteration(lowerName, language);
     }
 
+    hasCuratedTranslation(name, language = 'en') {
+        const key = name.toLowerCase().trim();
+        if (this.customTranslations[key]) return true;
+        if (language !== 'la' && this.nameDict[key]) return true;
+        return false;
+    }
+
     /**
      * Phonetic transliteration using language-specific rules
      */
@@ -393,6 +400,107 @@ class TransliterationEngine {
             'ティ': 'ti', 'トゥ': 'tu', 'ディ': 'di', 'ドゥ': 'du',
             'シェ': 'she', 'ジェ': 'je', 'チェ': 'che'
         };
+    }
+
+    /**
+     * Inverse of getKatakanaMoraMap. First kana for a mora wins
+     * (ジ over ヂ, ズ over ヅ).
+     */
+    getMoraToKatakanaMap() {
+        const kanaToMora = this.getKatakanaMoraMap();
+        const moraToKana = {};
+        Object.entries(kanaToMora).forEach(([kana, mora]) => {
+            if (!moraToKana[mora]) moraToKana[mora] = kana;
+        });
+        moraToKana.si = moraToKana.shi;
+        moraToKana.ti = moraToKana.ti || 'ティ';
+        moraToKana.tu = moraToKana.tu || 'トゥ';
+        moraToKana.hu = moraToKana.fu;
+        moraToKana.zi = moraToKana.ji;
+        return moraToKana;
+    }
+
+    /**
+     * Turn a romaji string into katakana by longest-mora match.
+     * Does not merge n-finals (ken → ケン, not a single ケン-as-ken kanji key).
+     */
+    romajiToKatakanaReading(romaji) {
+        const moraToKana = this.getMoraToKatakanaMap();
+        const keys = Object.keys(moraToKana).sort((a, b) => b.length - a.length);
+        const text = String(romaji || '').toLowerCase().trim();
+        const syllables = [];
+        const kana = [];
+        let i = 0;
+
+        while (i < text.length) {
+            let matched = false;
+            for (let k = 0; k < keys.length; k++) {
+                const key = keys[k];
+                if (text.substr(i, key.length) === key) {
+                    const kanaChar = moraToKana[key];
+                    const mora = this.getKatakanaMoraMap()[kanaChar] || key;
+                    syllables.push(mora);
+                    kana.push(kanaChar);
+                    i += key.length;
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) i++;
+        }
+
+        return {
+            katakana: kana.join(''),
+            syllables,
+            kana
+        };
+    }
+
+    /**
+     * Katakana spellings for a roman name that is not in the dictionary.
+     * Always includes the phonetic engine’s reading, then ク/ケ ending
+     * variants when the English name makes that ambiguous.
+     */
+    generateKatakanaOptions(name, language = 'en') {
+        const lower = name.toLowerCase().trim();
+        const options = [];
+        const seen = new Set();
+
+        const add = (romaji, label, recommended) => {
+            const reading = this.romajiToKatakanaReading(romaji);
+            if (!reading.katakana || seen.has(reading.katakana)) return;
+            seen.add(reading.katakana);
+            options.push({
+                katakana: reading.katakana,
+                syllables: reading.syllables,
+                kana: reading.kana,
+                romaji,
+                label,
+                recommended: !!recommended
+            });
+        };
+
+        const primary = this.phoneticTransliteration(lower, language);
+        add(primary, 'Suggested', true);
+
+        const primaryReading = this.romajiToKatakanaReading(primary);
+        const mora = primaryReading.syllables;
+        if (mora.length > 0) {
+            const last = mora[mora.length - 1];
+            const stem = mora.slice(0, -1).join('');
+            const kLikeEnding = /([kg]|ke|que)$/i.test(lower);
+
+            if (kLikeEnding && (last === 'ku' || last === 'ke' || last === 'ko')) {
+                if (last !== 'ku') add(stem + 'ku', 'ク ending (silent e)', false);
+                if (last !== 'ke') add(stem + 'ke', 'ケ ending (pronounced)', false);
+            }
+
+            if (/ake$/i.test(lower) && last === 'ku' && mora[mora.length - 2] !== 'i') {
+                add(stem + 'iku', 'エイク (long a)', false);
+            }
+        }
+
+        return options;
     }
 
     /**
