@@ -41,20 +41,34 @@ Todo:
 - � Save custom translations
 - 🌸 Beautiful sakura-themed design
 
-## � Quick Start
+## Quick Start
 
 ### Online
-Visit: [https://chaserml.github.io/japanese-name-generator/](https://chaserml.github.io/japanese-name-generator/)
+The app is hosted on Cloudflare Workers at [https://names.ailondonstudio.com](https://names.ailondonstudio.com).
+
+GitHub Pages (`chaserml.github.io` / `www.chaseip.com`) is the previous host. After the Cloudflare deploy is live, disable Pages in the repo settings so the repo can be made private.
 
 ### Local Development
 ```bash
-# Clone the repository
-git clone https://github.com/chaserml/japanese-name-generator.git
-cd japanese-name-generator
-
-# Open in browser
-# Simply open index.html in your web browser
+npm install
+npm run dev
 ```
+
+Or open `index.html` directly in a browser.
+
+### Deploy to Cloudflare
+Pushes to `main` deploy via GitHub Actions. Add these repository secrets:
+
+- `CLOUDFLARE_ACCOUNT_ID` — Cloudflare dashboard → Workers → Account ID
+- `CLOUDFLARE_API_TOKEN` — [Create a token](https://dash.cloudflare.com/profile/api-tokens) with **Edit Cloudflare Workers**, plus **Zone:Zone:Read** and **Zone:DNS:Edit** on `ailondonstudio.com` so Wrangler can attach `names.ailondonstudio.com`
+
+Manual deploy:
+
+```bash
+npx wrangler deploy
+```
+
+The Worker uses a **subdomain** (`names.ailondonstudio.com`) because the apex already serves the studio site. After the first successful deploy, GitHub Pages is no longer required and this repository can be private.
 
 ## 📝 Usage
 
@@ -180,6 +194,8 @@ japanese-name-generator/
 ├── script.js               # Main application logic
 ├── kanji-database.js       # Comprehensive kanji mappings
 ├── translation-engine.js   # Phonetic transliteration engine
+├── wrangler.jsonc          # Cloudflare Workers (static assets) config
+├── .github/workflows/      # Deploy on push to main
 └── README.md              # This file
 ```
 
